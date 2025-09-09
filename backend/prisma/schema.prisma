@@ -1,0 +1,113 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+model User {
+  id            BigInt     @id
+  email         String     @unique
+  passwordHash  String     @map("password_hash")
+  role          Role
+  hallId        BigInt?    @map("hall_id")
+  lastLoginAt   DateTime?  @map("last_login_at")
+
+  hall          Hall?      @relation(fields: [hallId], references: [id])
+  ownedHalls    Hall[]     @relation("HallOwner")
+  createdInvitations Invitation[] @relation("InvitationCreator")
+
+  @@map("users")
+}
+
+model Hall {
+  id          BigInt     @id
+  name        String
+  description String
+  address     String
+  email       String
+  phone       String
+  status      HallStatus @default(INACTIVE)
+  ownerId     BigInt     @map("owner_id")
+  balance     BigInt
+
+  owner       User       @relation("HallOwner", fields: [ownerId], references: [id])
+  users       User[]
+  invitations Invitation[]
+
+  @@map("halls")
+}
+
+model Invitation {
+  id          BigInt      @id
+  name        String
+  description String
+  eventDate   DateTime    @map("event_date")
+  hallId      BigInt
+  creatorId   BigInt
+
+  hall        Hall        @relation(fields: [hallId], references: [id])
+  creator     User        @relation("InvitationCreator", fields: [creatorId], references: [id])
+  messages    InvitationMessage[]
+  recipients  InvitationRecipient[]
+
+  @@map("invitations")
+}
+
+model InvitationMessage {
+  id            BigInt      @id
+  content       String
+  invitationId  BigInt      @map("invitation_id")
+
+  invitation    Invitation  @relation(fields: [invitationId], references: [id])
+  recipients    InvitationRecipient[]
+
+  @@map("invitation_message")
+}
+
+model InvitationRecipient {
+  id                  BigInt      @id
+  invitationId        BigInt      @map("invitation_id")
+  invitationMessageId BigInt      @map("invitation_message_id")
+  recipientName       String      @map("recipient_name")
+  phoneNumber         String      @map("phone_number")
+  messageStatus       MessageStatus @default(PENDING) @map("message_status")
+  sendAt              DateTime    @map("send_at")
+  sentAt              DateTime?   @map("sent_at")
+
+  invitation          Invitation  @relation(fields: [invitationId], references: [id])
+  invitationMessage   InvitationMessage @relation(fields: [invitationMessageId], references: [id])
+
+  @@map("invitation_recipient")
+}
+
+// Enums
+enum Role {
+  SUPER_ADMIN
+  HALL_ADMIN
+  HALL_EMPLOYEE
+}
+
+enum HallStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+}
+
+enum MessageStatus {
+  PENDING
+  SENT
+  DELIVERED
+  READ
+  FAILED
+}
