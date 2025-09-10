@@ -1,0 +1,6 @@
+export enum EnvTypes {
+  DEVELOPMENT = 'DEVELOPMENT',
+  PRODUCTION = 'PRODUCTION',
+  STAGING = 'STAGING',
+  LOCAL = 'LOCAL',
+}

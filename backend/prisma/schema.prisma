@@ -6,7 +6,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
 }
 
 datasource db {
@@ -15,17 +14,46 @@ datasource db {
 }
 
 
-model User {
-  id            BigInt     @id
-  email         String     @unique
-  passwordHash  String     @map("password_hash")
-  role          Role
-  hallId        BigInt?    @map("hall_id")
-  lastLoginAt   DateTime?  @map("last_login_at")
+// =======================
+// ENUMS
+// =======================
+enum Role {
+  super_admin
+  hall_admin
+  hall_employee
+}
 
-  hall          Hall?      @relation(fields: [hallId], references: [id])
-  ownedHalls    Hall[]     @relation("HallOwner")
-  createdInvitations Invitation[] @relation("InvitationCreator")
+enum HallStatus {
+  active
+  inactive
+  suspended
+}
+
+enum MessageStatus {
+  pending
+  sent
+  delivered
+  read
+  failed
+}
+
+// =======================
+// MODELS
+// =======================
+
+model User {
+  id             BigInt      @id
+  name           String
+  email          String      @unique
+  passwordHash   String      @map("password_hash")
+  role           Role
+  lastLoginAt    DateTime?   @map("last_login_at")
+  createdAt      DateTime    @default(now()) @map("created_at")
+  updatedAt      DateTime    @updatedAt @map("updated_at")
+
+  // Relations
+  ownedHalls     Hall[]      @relation("HallOwner")
+  createdInvites Invitation[] @relation("InvitationCreator")
 
   @@map("users")
 }
@@ -37,12 +65,14 @@ model Hall {
   address     String
   email       String
   phone       String
-  status      HallStatus @default(INACTIVE)
+  status      HallStatus @default(inactive)
   ownerId     BigInt     @map("owner_id")
   balance     BigInt
+  createdAt   DateTime   @default(now()) @map("created_at")
+  updatedAt   DateTime   @updatedAt @map("updated_at")
 
+  // Relations
   owner       User       @relation("HallOwner", fields: [ownerId], references: [id])
-  users       User[]
   invitations Invitation[]
 
   @@map("halls")
@@ -50,12 +80,15 @@ model Hall {
 
 model Invitation {
   id          BigInt      @id
-  name        String
+  title       String
   description String
   eventDate   DateTime    @map("event_date")
-  hallId      BigInt
-  creatorId   BigInt
+  hallId      BigInt      @map("hall_id")
+  creatorId   BigInt      @map("creator_id")
+  createdAt   DateTime    @default(now()) @map("created_at")
+  updatedAt   DateTime    @updatedAt @map("updated_at")
 
+  // Relations
   hall        Hall        @relation(fields: [hallId], references: [id])
   creator     User        @relation("InvitationCreator", fields: [creatorId], references: [id])
   messages    InvitationMessage[]
@@ -65,49 +98,34 @@ model Invitation {
 }
 
 model InvitationMessage {
-  id            BigInt      @id
-  content       String
-  invitationId  BigInt      @map("invitation_id")
+  id           BigInt                @id
+  content      String
+  invitationId BigInt                @map("invitation_id")
+  createdAt    DateTime              @default(now()) @map("created_at")
+  updatedAt    DateTime              @updatedAt @map("updated_at")
 
-  invitation    Invitation  @relation(fields: [invitationId], references: [id])
-  recipients    InvitationRecipient[]
+  // Relations
+  invitation   Invitation            @relation(fields: [invitationId], references: [id])
+  recipients   InvitationRecipient[]
 
   @@map("invitation_message")
 }
 
 model InvitationRecipient {
-  id                  BigInt      @id
-  invitationId        BigInt      @map("invitation_id")
-  invitationMessageId BigInt      @map("invitation_message_id")
-  recipientName       String      @map("recipient_name")
-  phoneNumber         String      @map("phone_number")
-  messageStatus       MessageStatus @default(PENDING) @map("message_status")
-  sendAt              DateTime    @map("send_at")
-  sentAt              DateTime?   @map("sent_at")
+  id                  BigInt          @id
+  invitationId        BigInt          @map("invitation_id")
+  invitationMessageId BigInt          @map("invitation_message_id")
+  recipientName       String          @map("recipient_name")
+  phoneNumber         String          @map("phone_number")
+  messageStatus       MessageStatus   @default(pending) @map("message_status")
+  sendAt              DateTime        @map("send_at")
+  sentAt              DateTime?       @map("sent_at")
+  createdAt           DateTime        @default(now()) @map("created_at")
+  updatedAt           DateTime        @updatedAt @map("updated_at")
 
-  invitation          Invitation  @relation(fields: [invitationId], references: [id])
-  invitationMessage   InvitationMessage @relation(fields: [invitationMessageId], references: [id])
+  // Relations
+  invitation        Invitation        @relation(fields: [invitationId], references: [id])
+  invitationMessage InvitationMessage @relation(fields: [invitationMessageId], references: [id])
 
   @@map("invitation_recipient")
-}
-
-// Enums
-enum Role {
-  SUPER_ADMIN
-  HALL_ADMIN
-  HALL_EMPLOYEE
-}
-
-enum HallStatus {
-  ACTIVE
-  INACTIVE
-  SUSPENDED
-}
-
-enum MessageStatus {
-  PENDING
-  SENT
-  DELIVERED
-  READ
-  FAILED
 }
