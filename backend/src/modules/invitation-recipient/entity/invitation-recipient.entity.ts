@@ -1,7 +1,7 @@
 import { MessageStatus } from '@/modules/invitation-recipient/enum/general.enum';
-import { InvitationEntity } from '@/modules/invitation/entity/invitation.entity';
 import { InvitationMessageEntity } from '@/modules/invitation-message/entity/invitation-message.entity';
 import { BaseEntity } from '@/common/base/base.entity';
+import { InvitationRecipientZodType } from '@/modules/invitation-recipient/zod/invitation-recipient.zod';
 
 export class InvitationRecipientEntity extends BaseEntity {
   invitationId: bigint;
@@ -12,10 +12,8 @@ export class InvitationRecipientEntity extends BaseEntity {
   sendAt: Date;
   sentAt?: Date;
 
-  invitation?: InvitationEntity;
-  invitationMessage?: InvitationMessageEntity;
-
-  // constructor(props: Partial<InvitationRecipientEntity>) {
-  //   Object.assign(this, props);
-  // }
+  constructor(props: InvitationRecipientZodType) {
+    super();
+    Object.assign(this, props);
+  }
 }

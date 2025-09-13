@@ -48,12 +48,14 @@ model User {
   passwordHash   String      @map("password_hash")
   role           Role
   lastLoginAt    DateTime?   @map("last_login_at")
+  hallId         BigInt?     @map("hall_id")
   createdAt      DateTime    @default(now()) @map("created_at")
   updatedAt      DateTime    @updatedAt @map("updated_at")
 
   // Relations
   ownedHalls     Hall[]      @relation("HallOwner")
   createdInvites Invitation[] @relation("InvitationCreator")
+  hall           Hall?       @relation("HallEmployees", fields: [hallId], references: [id])
 
   @@map("users")
 }
@@ -67,12 +69,13 @@ model Hall {
   phone       String
   status      HallStatus @default(inactive)
   ownerId     BigInt     @map("owner_id")
-  balance     BigInt
+  balance     Int
   createdAt   DateTime   @default(now()) @map("created_at")
   updatedAt   DateTime   @updatedAt @map("updated_at")
 
   // Relations
   owner       User       @relation("HallOwner", fields: [ownerId], references: [id])
+  employees   User[]     @relation("HallEmployees")
   invitations Invitation[]
 
   @@map("halls")

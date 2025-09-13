@@ -1,11 +1,14 @@
 import {
   BaseZodSchema,
+  ZodBigInt,
   ZodDate,
-  ZodNumber,
   ZodString,
   ZodStringNullable,
 } from '@/common/base/base.zod';
 import { z } from 'zod';
+import { UserZodType } from '@/modules/user/zod/user.zod';
+import { InvitationMessageZodType } from '@/modules/invitation-message/zod/invitation-message.zod';
+import { InvitationRecipientZodType } from '@/modules/invitation-recipient/zod/invitation-recipient.zod';
 
 export type InvitationZodType = z.infer<typeof InvitationZodSchema>;
 
@@ -13,6 +16,10 @@ export const InvitationZodSchema = BaseZodSchema.extend({
   title: ZodString,
   description: ZodStringNullable,
   eventDate: ZodDate,
-  hallId: ZodNumber,
-  creatorId: ZodNumber,
+  hallId: ZodBigInt,
+  creatorId: ZodBigInt,
+
+  creator: z.any() as z.ZodType<UserZodType | null | undefined>,
+  messages: z.any() as z.ZodType<InvitationMessageZodType[] | null | undefined>,
+  recipients: z.any() as z.ZodType<InvitationRecipientZodType[] | null | undefined>,
 });

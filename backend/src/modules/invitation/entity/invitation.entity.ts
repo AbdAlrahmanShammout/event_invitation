@@ -2,6 +2,8 @@ import { UserEntity } from '@/modules/user/entity/user.entity';
 import { InvitationMessageEntity } from '@/modules/invitation-message/entity/invitation-message.entity';
 import { InvitationRecipientEntity } from '@/modules/invitation-recipient/entity/invitation-recipient.entity';
 import { BaseEntity } from '@/common/base/base.entity';
+import { HallZodType } from '@/modules/hall/zod/hall.zod';
+import { InvitationZodType } from '@/modules/invitation/zod/invitation.zod';
 
 export class InvitationEntity extends BaseEntity {
   title: string;
@@ -14,7 +16,8 @@ export class InvitationEntity extends BaseEntity {
   messages?: InvitationMessageEntity[];
   recipients?: InvitationRecipientEntity[];
 
-  // constructor(props: Partial<InvitationEntity>) {
-  //   Object.assign(this, props);
-  // }
+  constructor(data: InvitationZodType) {
+    super();
+    Object.assign(this, data);
+  }
 }
