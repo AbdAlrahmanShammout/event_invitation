@@ -19,7 +19,7 @@ export const InvitationZodSchema = BaseZodSchema.extend({
   hallId: ZodBigInt,
   creatorId: ZodBigInt,
 
-  creator: z.any() as z.ZodType<UserZodType | null | undefined>,
-  messages: z.any() as z.ZodType<InvitationMessageZodType[] | null | undefined>,
-  recipients: z.any() as z.ZodType<InvitationRecipientZodType[] | null | undefined>,
+  creator: (z.any() as z.ZodType<UserZodType | null | undefined>).optional(),
+  messages: (z.any() as z.ZodType<InvitationMessageZodType[] | null | undefined>).optional(),
+  recipients: (z.any() as z.ZodType<InvitationRecipientZodType[] | null | undefined>).optional(),
 });

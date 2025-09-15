@@ -12,7 +12,7 @@ export type UserZodType = z.infer<typeof UserZodSchema>;
 export const UserZodSchema = BaseZodSchema.extend({
   name: ZodString,
   hallId: ZodBigIntNullable,
-  email: z.email(),
-  role: z.enum(Role),
+  email: z.string().email(),
+  role: z.enum(Object.values(Role) as [string, ...string[]]),
   lastLoginAt: ZodDateNullable,
 });

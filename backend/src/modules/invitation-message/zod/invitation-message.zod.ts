@@ -8,5 +8,5 @@ export const InvitationMessageZodSchema = BaseZodSchema.extend({
   content: ZodString,
   invitationId: ZodBigInt,
 
-  recipients: z.any() as z.ZodType<InvitationRecipientZodType[] | null | undefined>,
+  recipients: (z.any() as z.ZodType<InvitationRecipientZodType[] | null>).optional(),
 });

@@ -1,34 +1,36 @@
-// @ts-check
-import eslint from '@eslint/js';
-import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
+import { defineConfig } from 'eslint/config';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
-
-export default tseslint.config(
-  {
-    ignores: ['eslint.config.mjs'],
-  },
-  eslint.configs.recommended,
-  ...tseslint.configs.recommendedTypeChecked,
-  eslintPluginPrettierRecommended,
-  {
-    languageOptions: {
-      globals: {
-        ...globals.node,
-        ...globals.jest,
-      },
-      sourceType: 'commonjs',
-      parserOptions: {
-        projectService: true,
-        tsconfigRootDir: import.meta.dirname,
-      },
+import tsParser from '@typescript-eslint/parser';
+export default defineConfig([
+    {
+        files: ['**/*.{js,mjs,cjs,ts,mts,cts}'],
+        languageOptions: {
+            globals: globals.node,
+            parserOptions: {
+                ecmaVersion: 2023,
+                sourceType: 'module',
+            },
+        },
+        extends: ['eslint:recommended'],
     },
-  },
-  {
-    rules: {
-      '@typescript-eslint/no-explicit-any': 'off',
-      '@typescript-eslint/no-floating-promises': 'warn',
-      '@typescript-eslint/no-unsafe-argument': 'warn'
+    {
+        files: ['**/*.{ts,mts,cts}'],
+        languageOptions: {
+            parser: tsParser,
+            parserOptions: {
+                project: './tsconfig.json',
+                tsconfigRootDir: process.cwd(),
+            },
+        },
+        plugins: { '@typescript-eslint': tseslint },
+        extends: ['plugin:@typescript-eslint/recommended', 'plugin:prettier/recommended'],
+        rules: {
+            '@typescript-eslint/explicit-function-return-type': 'off',
+            '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+            '@typescript-eslint/no-explicit-any': 'warn',
+            '@typescript-eslint/no-unsafe-assignment': 'off',
+            '@typescript-eslint/no-unsafe-member-access': 'off',
+        },
     },
-  },
-);
+]);

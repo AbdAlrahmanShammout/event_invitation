@@ -11,9 +11,9 @@ import { EnvTypes } from '@/config/enviroment';
     ConfigModule.forRoot({
       load: configuration,
       validationSchema: Joi.object({
-        SERVER_PORT: Joi.number().default(8080),
+        SERVER_PORT: Joi.number().default(3000),
         SERVER_URL: Joi.string().default('http://localhost'),
-        CLIENT_URL: Joi.string().default('http://localhost:4200'),
+        CLIENT_URL: Joi.string().default('http://localhost:8080'),
         APP_ENV: Joi.string()
           .valid(...(Object.values(EnvTypes) as readonly EnvTypes[]))
           .default(EnvTypes.LOCAL),

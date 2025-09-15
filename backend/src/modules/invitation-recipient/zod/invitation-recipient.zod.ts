@@ -15,7 +15,7 @@ export const InvitationRecipientZodSchema = BaseZodSchema.extend({
   invitationMessageId: ZodBigInt,
   recipientName: ZodString,
   phoneNumber: ZodString,
-  messageStatus: z.enum(MessageStatus).default(MessageStatus.pending),
+  messageStatus: z.enum(Object.values(MessageStatus) as [string, ...string[]]).default(MessageStatus.pending),
   sendAt: ZodDate,
   sentAt: ZodDateNullable,
 });

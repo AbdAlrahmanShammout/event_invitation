@@ -42,7 +42,7 @@ enum MessageStatus {
 // =======================
 
 model User {
-  id             BigInt      @id
+  id             BigInt      @id @default(autoincrement())
   name           String
   email          String      @unique
   passwordHash   String      @map("password_hash")
@@ -61,15 +61,15 @@ model User {
 }
 
 model Hall {
-  id          BigInt     @id
+  id          BigInt     @id @default(autoincrement())
   name        String
-  description String
+  description String?
   address     String
   email       String
   phone       String
   status      HallStatus @default(inactive)
   ownerId     BigInt     @map("owner_id")
-  balance     Int
+  balance     Int        @default(0)
   createdAt   DateTime   @default(now()) @map("created_at")
   updatedAt   DateTime   @updatedAt @map("updated_at")
 
@@ -82,9 +82,9 @@ model Hall {
 }
 
 model Invitation {
-  id          BigInt      @id
+  id          BigInt      @id @default(autoincrement())
   title       String
-  description String
+  description String?
   eventDate   DateTime    @map("event_date")
   hallId      BigInt      @map("hall_id")
   creatorId   BigInt      @map("creator_id")
@@ -101,7 +101,7 @@ model Invitation {
 }
 
 model InvitationMessage {
-  id           BigInt                @id
+  id           BigInt                @id @default(autoincrement())
   content      String
   invitationId BigInt                @map("invitation_id")
   createdAt    DateTime              @default(now()) @map("created_at")
@@ -115,7 +115,7 @@ model InvitationMessage {
 }
 
 model InvitationRecipient {
-  id                  BigInt          @id
+  id                  BigInt          @id @default(autoincrement())
   invitationId        BigInt          @map("invitation_id")
   invitationMessageId BigInt          @map("invitation_message_id")
   recipientName       String          @map("recipient_name")

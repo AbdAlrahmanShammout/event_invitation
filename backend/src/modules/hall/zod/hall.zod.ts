@@ -18,11 +18,11 @@ export const HallZodSchema = BaseZodSchema.extend({
   address: ZodString,
   email: ZodString,
   phone: ZodString,
-  status: z.enum(HallStatus),
+  status: z.enum(Object.values(HallStatus) as [string, ...string[]]),
   ownerId: ZodBigInt,
   balance: ZodNumber,
 
-  owner: z.any() as z.ZodType<UserZodType | null | undefined>,
-  employees: z.any().nullish() as z.ZodType<UserZodType[] | null | undefined>,
-  invitations: z.any().nullish() as z.ZodType<InvitationZodType[] | null | undefined>,
+  owner: (z.any() as z.ZodType<UserZodType | null | undefined>).optional(),
+  employees: (z.any().nullish() as z.ZodType<UserZodType[] | null | undefined>).optional(),
+  invitations: (z.any().nullish() as z.ZodType<InvitationZodType[] | null | undefined>).optional(),
 });
