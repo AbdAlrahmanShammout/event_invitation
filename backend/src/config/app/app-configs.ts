@@ -5,5 +5,6 @@ export default [
     port: process.env.SERVER_PORT,
     clientUrl: process.env.CLIENT_URL,
     env: process.env.APP_ENV,
+    name: process.env.APP_NAME,
   })),
 ];

@@ -19,4 +19,8 @@ export class AppConfigService extends BaseConfigService {
   get env(): EnvTypes {
     return this.getValue<EnvTypes>('app.env');
   }
+
+  get name(): string {
+    return this.getValue<string>('app.name');
+  }
 }

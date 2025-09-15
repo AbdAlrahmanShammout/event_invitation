@@ -11,6 +11,7 @@ import { EnvTypes } from '@/config/enviroment';
     ConfigModule.forRoot({
       load: configuration,
       validationSchema: Joi.object({
+        APP_NAME: Joi.string().default('Event Invitation API'),
         SERVER_PORT: Joi.number().default(3000),
         SERVER_URL: Joi.string().default('http://localhost'),
         CLIENT_URL: Joi.string().default('http://localhost:8080'),
