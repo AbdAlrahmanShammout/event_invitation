@@ -1,6 +1,6 @@
 import {
   BaseZodSchema,
-  ZodBigInt,
+  ZodNumber,
   ZodDate,
   ZodString,
   ZodStringNullable,
@@ -16,8 +16,8 @@ export const InvitationZodSchema = BaseZodSchema.extend({
   title: ZodString,
   description: ZodStringNullable,
   eventDate: ZodDate,
-  hallId: ZodBigInt,
-  creatorId: ZodBigInt,
+  hallId: ZodNumber,
+  creatorId: ZodNumber,
 
   creator: (z.any() as z.ZodType<UserZodType | null | undefined>).optional(),
   messages: (z.any() as z.ZodType<InvitationMessageZodType[] | null | undefined>).optional(),

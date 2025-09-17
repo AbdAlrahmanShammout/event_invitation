@@ -4,5 +4,5 @@ export type CreateHallServiceInput = {
   address: string;
   email: string;
   phone: string;
-  ownerId: bigint;
+  ownerId: number;
 };

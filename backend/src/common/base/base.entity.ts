@@ -2,7 +2,7 @@
 // import { ZodEffects } from 'zod/lib/types';
 
 export abstract class BaseEntity {
-  id: bigint;
+  id: number;
 
   createdAt: Date;
 

@@ -4,8 +4,8 @@ import { BaseEntity } from '@/common/base/base.entity';
 import { InvitationRecipientZodType } from '@/modules/invitation-recipient/zod/invitation-recipient.zod';
 
 export class InvitationRecipientEntity extends BaseEntity {
-  invitationId: bigint;
-  invitationMessageId: bigint;
+  invitationId: number;
+  invitationMessageId: number;
   recipientName: string;
   phoneNumber: string;
   messageStatus: MessageStatus;

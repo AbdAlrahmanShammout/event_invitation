@@ -1,6 +1,5 @@
 import {
   BaseZodSchema,
-  ZodBigInt,
   ZodNumber,
   ZodString,
   ZodStringNullable,
@@ -18,8 +17,8 @@ export const HallZodSchema = BaseZodSchema.extend({
   address: ZodString,
   email: ZodString,
   phone: ZodString,
-  status: z.enum(Object.values(HallStatus) as [string, ...string[]]),
-  ownerId: ZodBigInt,
+  status: z.nativeEnum(HallStatus),
+  ownerId: ZodNumber,
   balance: ZodNumber,
 
   owner: (z.any() as z.ZodType<UserZodType | null | undefined>).optional(),

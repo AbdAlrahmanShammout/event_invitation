@@ -5,7 +5,7 @@ import { InvitationMessageZodType } from '@/modules/invitation-message/zod/invit
 
 export class InvitationMessageEntity extends BaseEntity {
   content: string;
-  invitationId: bigint;
+  invitationId: number;
 
   recipients?: InvitationRecipientEntity[];
 

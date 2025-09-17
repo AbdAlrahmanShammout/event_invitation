@@ -11,8 +11,8 @@ export class HallEntity extends BaseEntity {
   email: string;
   phone: string;
   status: HallStatus;
-  ownerId: bigint;
-  balance: bigint;
+  ownerId: number;
+  balance: number;
 
   owner?: UserEntity;
   employees?: UserEntity[];

@@ -47,14 +47,14 @@ export class HallRespnse extends BaseModelResponseDto {
     example: '1234567890123456789',
     type: 'string'
   })
-  ownerId: bigint;
+  ownerId: number;
 
   @ApiProperty({
     description: 'Current balance of the hall',
     example: '50000',
     type: 'string'
   })
-  balance: bigint;
+  balance: number;
 
   @ApiProperty({
     description: 'Hall owner information',

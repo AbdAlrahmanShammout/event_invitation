@@ -1,6 +1,6 @@
 import {
   BaseZodSchema,
-  ZodBigIntNullable,
+  ZodNumberNullable,
   ZodDateNullable,
   ZodString,
 } from '@/common/base/base.zod';
@@ -11,8 +11,8 @@ export type UserZodType = z.infer<typeof UserZodSchema>;
 
 export const UserZodSchema = BaseZodSchema.extend({
   name: ZodString,
-  hallId: ZodBigIntNullable,
+  hallId: ZodNumberNullable,
   email: z.string().email(),
-  role: z.enum(Object.values(Role) as [string, ...string[]]),
+  role: z.nativeEnum(Role),
   lastLoginAt: ZodDateNullable,
 });

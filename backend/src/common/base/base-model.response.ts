@@ -7,7 +7,7 @@ export class BaseModelResponseDto {
     example: '1234567890123456789',
     type: 'string'
   })
-  id: bigint;
+  id: number;
 
   @ApiProperty({
     description: 'Creation timestamp',

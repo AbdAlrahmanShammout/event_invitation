@@ -9,8 +9,8 @@ export class InvitationEntity extends BaseEntity {
   title: string;
   description: string;
   eventDate: Date;
-  hallId: bigint;
-  creatorId: bigint;
+  hallId: number;
+  creatorId: number;
 
   creator?: UserEntity;
   messages?: InvitationMessageEntity[];

@@ -1,6 +1,6 @@
 import {
   BaseZodSchema,
-  ZodBigInt,
+  ZodNumber,
   ZodDate,
   ZodDateNullable,
   ZodString,
@@ -11,11 +11,11 @@ import { MessageStatus } from '@prisma/client';
 export type InvitationRecipientZodType = z.infer<typeof InvitationRecipientZodSchema>;
 
 export const InvitationRecipientZodSchema = BaseZodSchema.extend({
-  invitationId: ZodBigInt,
-  invitationMessageId: ZodBigInt,
+  invitationId: ZodNumber,
+  invitationMessageId: ZodNumber,
   recipientName: ZodString,
   phoneNumber: ZodString,
-  messageStatus: z.enum(Object.values(MessageStatus) as [string, ...string[]]).default(MessageStatus.pending),
+  messageStatus: z.nativeEnum(MessageStatus).default(MessageStatus.pending),
   sendAt: ZodDate,
   sentAt: ZodDateNullable,
 });

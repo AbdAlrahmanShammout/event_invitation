@@ -5,7 +5,7 @@ import { UserRole } from '@/modules/user/enum/general.enum';
 export class UserEntity extends BaseEntity {
   name: string;
   email: string;
-  hallId?: bigint;
+  hallId?: number;
   role: UserRole;
   lastLoginAt?: Date;
 

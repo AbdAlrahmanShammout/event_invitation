@@ -22,7 +22,7 @@ export class UserResponse extends BaseModelResponseDto {
     type: 'string',
     required: false
   })
-  hallId?: bigint;
+  hallId?: number;
 
   @ApiProperty({
     description: 'Role of the user in the system',
