@@ -12,7 +12,7 @@ import { getRequestTypeFromHost, RequestType } from '../helpers/request.helper';
 import { httpExceptionHandler } from '@/common/filter/exception_return_handler/http_exception.handler';
 import { graphqlExceptionHandler } from '@/common/filter/exception_return_handler/graphql_exception.handler';
 import { GeneralTypeException } from '@/common/filter/exception_return_handler/type/general-type.exception';
-import { mapExceptionToGeneralType } from '@/common/filter/exception_mappers/exception-mapper';
+import { normalizeException } from '@/common/filter/exception_mappers/exception-mapper';
 
 @Catch()
 @Injectable()
@@ -20,19 +20,19 @@ export class GlobalExceptionFilter implements ExceptionFilter {
   constructor(private readonly appConfigService: AppConfigService) {}
 
   catch(exception: any, host: ArgumentsHost): any {
-    let generalTypeException = mapExceptionToGeneralType(exception);
+    let normalizedError = normalizeException(exception);
 
-    this.logException(generalTypeException);
-    this.captureException(generalTypeException);
+    this.logError(normalizedError);
+    this.reportErrorToSentry(normalizedError);
 
-    if (!generalTypeException.userFriendly && this.isProduction()) {
-      generalTypeException = this.getDefaultHttpException(generalTypeException);
+    if (!normalizedError.userFriendly && this.shouldHideErrorDetails()) {
+      normalizedError = this.createSafeProductionError(normalizedError);
     }
 
-    return this.handleException(generalTypeException, host);
+    return this.formatErrorResponse(normalizedError, host);
   }
 
-  private logException(exception: GeneralTypeException) {
+  private logError(exception: GeneralTypeException) {
     console.error({
       ...exception,
       message: exception.message,
@@ -40,7 +40,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     });
   }
 
-  private captureException(exception: GeneralTypeException) {
+  private reportErrorToSentry(exception: GeneralTypeException) {
     if (
       !exception.userFriendly &&
       this.appConfigService.env !== EnvTypes.LOCAL
@@ -49,30 +49,30 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     }
   }
 
-  private isProduction(): boolean {
+  private shouldHideErrorDetails(): boolean {
     return ![
       EnvTypes.LOCAL.toString(),
       EnvTypes.DEVELOPMENT.toString(),
     ].includes(this.appConfigService.env);
   }
 
-  private getDefaultHttpException(
+  private createSafeProductionError(
     exception: GeneralTypeException,
   ): GeneralTypeException {
-    const isNotFoundOrForbidden =
+    const isClientSideError =
       exception.statusCode === HttpStatus.FORBIDDEN ||
       exception.statusCode === HttpStatus.NOT_FOUND;
 
     return new GeneralTypeException({
-      message: isNotFoundOrForbidden ? 'not found' : 'Internal server error',
-      code: isNotFoundOrForbidden ? 'NOT_FOUND' : 'INTERNAL_SERVER_ERROR',
-      statusCode: isNotFoundOrForbidden
+      message: isClientSideError ? 'not found' : 'Internal server error',
+      code: isClientSideError ? 'NOT_FOUND' : 'INTERNAL_SERVER_ERROR',
+      statusCode: isClientSideError
         ? HttpStatus.NOT_FOUND
         : HttpStatus.INTERNAL_SERVER_ERROR,
     });
   }
 
-  private handleException(
+  private formatErrorResponse(
     exception: GeneralTypeException,
     host: ArgumentsHost,
   ): any {

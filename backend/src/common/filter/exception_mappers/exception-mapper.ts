@@ -8,8 +8,9 @@ import {
 } from '@nestjs/common';
 import { ZodError } from 'zod';
 import { mapAxiosErrorException } from '@/common/filter/exception_mappers/axios-error-handler';
+// Updated function names for better clarity
 
-function handleExtendedExceptions(exception: any): GeneralTypeException | null {
+function tryMapSpecialExceptions(exception: any): GeneralTypeException | null {
   return (
     // mapSequelizeException(exception) ||
     // mapCaslForbiddenException(exception) ||
@@ -19,11 +20,11 @@ function handleExtendedExceptions(exception: any): GeneralTypeException | null {
   );
 }
 
-export function mapExceptionToGeneralType(
+export function normalizeException(
   exception: any,
 ): GeneralTypeException {
-  const extendedException = handleExtendedExceptions(exception);
-  if (extendedException) return extendedException;
+  const customMappedError = tryMapSpecialExceptions(exception);
+  if (customMappedError) return customMappedError;
 
   console.log(exception.constructor.name);
   if (exception instanceof AppException) {
@@ -99,3 +100,4 @@ export function mapExceptionToGeneralType(
     stack: exception.stack,
   });
 }
+
