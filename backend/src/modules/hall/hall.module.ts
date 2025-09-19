@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
-import { HallService } from '@/modules/hall/hall.service';
+
 import { HallController } from '@/modules/hall/hall.controller';
+import { HallService } from '@/modules/hall/hall.service';
 import { HallRepository } from '@/modules/hall/repository/hall.repository';
 import { HallPrismaReposiory } from '@/modules/hall/repository/hall-prisma.reposiory';
 import { UserModule } from '@/modules/user/user.module';

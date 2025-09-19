@@ -1,13 +1,9 @@
-import {
-  BaseZodSchema,
-  ZodNumber,
-  ZodString,
-  ZodStringNullable,
-} from '@/common/base/base.zod';
-import { z } from 'zod';
 import { HallStatus } from '@prisma/client';
-import { UserZodType } from '@/modules/user/zod/user.zod';
+import { z } from 'zod';
+
+import { BaseZodSchema, ZodNumber, ZodString, ZodStringNullable } from '@/common/base/base.zod';
 import { InvitationZodType } from '@/modules/invitation/zod/invitation.zod';
+import { UserZodType } from '@/modules/user/zod/user.zod';
 
 export type HallZodType = z.infer<typeof HallZodSchema>;
 

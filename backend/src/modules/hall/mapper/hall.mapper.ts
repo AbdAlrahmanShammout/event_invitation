@@ -1,7 +1,7 @@
 import { HallEntity } from '@/modules/hall/entity/hall.entity';
-import { HallFullType } from '@/providers/database/prisma/schema-prisma.type';
-import { UserMapper } from '@/modules/user/mapper/user.mapper';
 import { InvitationMapper } from '@/modules/invitation/mapper/invitation.mapper';
+import { UserMapper } from '@/modules/user/mapper/user.mapper';
+import { HallFullType } from '@/providers/database/prisma/schema-prisma.type';
 
 export class HallMapper {
   static toEntity(schema: HallFullType): HallEntity {

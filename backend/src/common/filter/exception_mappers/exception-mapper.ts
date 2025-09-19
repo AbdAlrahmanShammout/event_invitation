@@ -1,5 +1,3 @@
-import { AppException } from '@/common/exceptions/app.exception';
-import { GeneralTypeException } from '@/common/filter/exception_return_handler/type/general-type.exception';
 import {
   HttpException,
   HttpStatus,
@@ -7,8 +5,11 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { ZodError } from 'zod';
+
+import { AppException } from '@/common/exceptions/app.exception';
 import { mapAxiosErrorException } from '@/common/filter/exception_mappers/axios-error-handler';
 import { mapPrismaException } from '@/common/filter/exception_mappers/prisma-exception-handler';
+import { GeneralTypeException } from '@/common/filter/exception_return_handler/type/general-type.exception';
 // Updated function names for better clarity
 
 function tryMapSpecialExceptions(exception: any): GeneralTypeException | null {
@@ -22,9 +23,7 @@ function tryMapSpecialExceptions(exception: any): GeneralTypeException | null {
   );
 }
 
-export function normalizeException(
-  exception: any,
-): GeneralTypeException {
+export function normalizeException(exception: any): GeneralTypeException {
   const customMappedError = tryMapSpecialExceptions(exception);
   if (customMappedError) return customMappedError;
 
@@ -102,4 +101,3 @@ export function normalizeException(
     stack: exception.stack,
   });
 }
-

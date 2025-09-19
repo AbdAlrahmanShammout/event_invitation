@@ -1,9 +1,11 @@
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
-import { AppConfigService } from '@/config/app/app-config.service';
 import { Logger, ValidationPipe } from '@nestjs/common';
-import {SwaggerProvider} from "@/providers/swagger/swagger.provider";
-import {InputValidationPipe} from "@/common/pipes/input-validation.pipe";
+import { NestFactory } from '@nestjs/core';
+
+import { InputValidationPipe } from '@/common/pipes/input-validation.pipe';
+import { AppConfigService } from '@/config/app/app-config.service';
+import { SwaggerProvider } from '@/providers/swagger/swagger.provider';
+
+import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -11,10 +13,7 @@ async function bootstrap() {
   app.enableCors();
   app.useGlobalPipes(new InputValidationPipe());
 
-
   SwaggerProvider.setupSwagger(app);
-
-
 
   const appConfigService = app.get(AppConfigService);
   const port = appConfigService.port;

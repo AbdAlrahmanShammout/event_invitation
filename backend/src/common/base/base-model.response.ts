@@ -1,11 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
+
 import { BaseEntity } from '@/common/base/base.entity';
 
 export class BaseModelResponseDto {
   @ApiProperty({
     description: 'Unique identifier',
     example: '1234567890123456789',
-    type: 'string'
+    type: 'string',
   })
   id: number;
 
@@ -14,7 +15,7 @@ export class BaseModelResponseDto {
     example: '2023-12-01T10:00:00Z',
     type: 'string',
     format: 'date-time',
-    required: false
+    required: false,
   })
   createdAt?: Date;
 
@@ -23,7 +24,7 @@ export class BaseModelResponseDto {
     example: '2023-12-01T10:00:00Z',
     type: 'string',
     format: 'date-time',
-    required: false
+    required: false,
   })
   updatedAt?: Date;
 

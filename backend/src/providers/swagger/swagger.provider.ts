@@ -1,11 +1,12 @@
-import * as fs from 'fs';
 import { INestApplication } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import * as fs from 'fs';
+
+import { AppConfigService } from '@/config/app/app-config.service';
+import { EnvTypes } from '@/config/enviroment';
 // import * as YAML from 'js-yaml';
 import { SwaggerConfigService } from '@/config/swagger/swagger-config.service';
 import { SWAGGER_API_ROOT } from '@/providers/swagger/consts';
-import { AppConfigService } from '@/config/app/app-config.service';
-import { EnvTypes } from '@/config/enviroment';
 
 export class SwaggerProvider {
   static setupSwagger(app: INestApplication): void {

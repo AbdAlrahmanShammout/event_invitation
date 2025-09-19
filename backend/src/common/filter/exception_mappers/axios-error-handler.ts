@@ -1,4 +1,5 @@
 import axios, { AxiosError } from 'axios';
+
 import { GeneralTypeException } from '@/common/filter/exception_return_handler/type/general-type.exception';
 
 export function mapAxiosErrorException(exception: any) {
@@ -15,13 +16,9 @@ export function mapAxiosErrorException(exception: any) {
 
     // Ensure responseData, requestParams, and requestBody are strings (pretty-printed JSON)
     const formattedResponse =
-      typeof responseData === 'object'
-        ? JSON.stringify(responseData, null, 2)
-        : responseData;
+      typeof responseData === 'object' ? JSON.stringify(responseData, null, 2) : responseData;
     const formattedParams =
-      typeof requestParams === 'object'
-        ? JSON.stringify(requestParams, null, 2)
-        : requestParams;
+      typeof requestParams === 'object' ? JSON.stringify(requestParams, null, 2) : requestParams;
     const formattedBody =
       typeof requestBody === 'string'
         ? JSON.stringify(JSON.parse(requestBody), null, 2)

@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { BaseConfigService } from '../base-config.service';
+
 import { EnvTypes } from '@/config/enviroment';
+
+import { BaseConfigService } from '../base-config.service';
 
 @Injectable()
 export class AppConfigService extends BaseConfigService {

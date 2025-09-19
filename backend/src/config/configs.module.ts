@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+
+import { SwaggerConfigModule } from '@/config/swagger/swagger-config.module';
+
 import { AppConfigModule } from './app/app-config.module';
 import { DBConfigModule } from './database/db-config.module';
 import { JwtConfigModule } from './jwt/jwt-config.module';
-import {SwaggerConfigModule} from "@/config/swagger/swagger-config.module";
 
 @Module({
   imports: [
@@ -15,7 +17,7 @@ import {SwaggerConfigModule} from "@/config/swagger/swagger-config.module";
     DBConfigModule,
     JwtConfigModule,
     AppConfigModule,
-    SwaggerConfigModule
+    SwaggerConfigModule,
   ],
 })
 export class ConfigsModule {}

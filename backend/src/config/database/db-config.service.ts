@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+
 import { BaseConfigService } from '../base-config.service';
 
 @Injectable()

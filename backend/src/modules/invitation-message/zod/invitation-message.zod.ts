@@ -1,5 +1,6 @@
-import { BaseZodSchema, ZodNumber, ZodString } from '@/common/base/base.zod';
 import { z } from 'zod';
+
+import { BaseZodSchema, ZodNumber, ZodString } from '@/common/base/base.zod';
 import { InvitationRecipientZodType } from '@/modules/invitation-recipient/zod/invitation-recipient.zod';
 
 export type InvitationMessageZodType = z.infer<typeof InvitationMessageZodSchema>;

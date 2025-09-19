@@ -1,4 +1,5 @@
 import { registerAs } from '@nestjs/config';
+
 import { version } from '../../../package.json';
 
 export default registerAs('swagger', () => ({

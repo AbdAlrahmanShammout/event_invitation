@@ -1,12 +1,13 @@
+import { MessageStatus } from '@prisma/client';
+import { z } from 'zod';
+
 import {
   BaseZodSchema,
-  ZodNumber,
   ZodDate,
   ZodDateNullable,
+  ZodNumber,
   ZodString,
 } from '@/common/base/base.zod';
-import { z } from 'zod';
-import { MessageStatus } from '@prisma/client';
 
 export type InvitationRecipientZodType = z.infer<typeof InvitationRecipientZodSchema>;
 

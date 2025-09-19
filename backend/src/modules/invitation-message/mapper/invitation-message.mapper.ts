@@ -1,6 +1,6 @@
-import { InvitationMessageFullType } from '@/providers/database/prisma/schema-prisma.type';
 import { InvitationMessageEntity } from '@/modules/invitation-message/entity/invitation-message.entity';
 import { InvitationRecipientMapper } from '@/modules/invitation-recipient/mapper/invitation-recipient.mapper';
+import { InvitationMessageFullType } from '@/providers/database/prisma/schema-prisma.type';
 
 export class InvitationMessageMapper {
   static toEntity(schema: InvitationMessageFullType): InvitationMessageEntity {

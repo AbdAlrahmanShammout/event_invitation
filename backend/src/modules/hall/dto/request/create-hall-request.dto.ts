@@ -1,3 +1,5 @@
+import { ApiProperty } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 import {
   IsEmail,
   IsNotEmpty,
@@ -7,15 +9,14 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
-import { Transform } from 'class-transformer';
-import { ApiProperty } from '@nestjs/swagger';
+
 import { PASSWORD_PATTERN } from '@/common/constants/regex.constant';
 
 export class CreateHallRequestDto {
   @ApiProperty({
     description: 'The name of the hall',
     example: 'Grand Ballroom',
-    minLength: 1
+    minLength: 1,
   })
   @IsString()
   @IsNotEmpty()
@@ -24,7 +25,7 @@ export class CreateHallRequestDto {
   @ApiProperty({
     description: 'Optional description of the hall',
     example: 'A beautiful venue for weddings and events',
-    required: false
+    required: false,
   })
   @IsOptional()
   @IsString()
@@ -32,7 +33,7 @@ export class CreateHallRequestDto {
 
   @ApiProperty({
     description: 'Physical address of the hall',
-    example: '123 Main St, City, State 12345'
+    example: '123 Main St, City, State 12345',
   })
   @IsString()
   @IsNotEmpty()
@@ -41,7 +42,7 @@ export class CreateHallRequestDto {
   @ApiProperty({
     description: 'Contact email for the hall',
     example: 'contact@grandballroom.com',
-    format: 'email'
+    format: 'email',
   })
   @IsEmail()
   @Transform(({ value }: { value: string }) => value.toLowerCase())
@@ -49,7 +50,7 @@ export class CreateHallRequestDto {
 
   @ApiProperty({
     description: 'Contact phone number for the hall',
-    example: '+1-555-123-4567'
+    example: '+1-555-123-4567',
   })
   @IsString()
   @IsNotEmpty()
@@ -57,7 +58,7 @@ export class CreateHallRequestDto {
 
   @ApiProperty({
     description: 'Full name of the hall owner',
-    example: 'John Doe'
+    example: 'John Doe',
   })
   @IsString()
   @IsNotEmpty()
@@ -66,18 +67,19 @@ export class CreateHallRequestDto {
   @ApiProperty({
     description: 'Email address for the hall owner account',
     example: 'john.doe@email.com',
-    format: 'email'
+    format: 'email',
   })
   @IsEmail()
   @Transform(({ value }: { value: string }) => value.toLowerCase())
   ownerEmail: string;
 
   @ApiProperty({
-    description: 'Password for the hall owner account. Must be at least 8 characters long and meet security requirements.',
+    description:
+      'Password for the hall owner account. Must be at least 8 characters long and meet security requirements.',
     example: 'SecurePass123!',
     minLength: 8,
     maxLength: 255,
-    format: 'password'
+    format: 'password',
   })
   @IsString()
   @IsNotEmpty()

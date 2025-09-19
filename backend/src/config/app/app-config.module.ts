@@ -1,9 +1,11 @@
 import { Global, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import * as Joi from 'joi';
+
+import { EnvTypes } from '@/config/enviroment';
+
 import { AppConfigService } from './app-config.service';
 import configuration from './app-configs';
-import { EnvTypes } from '@/config/enviroment';
 
 @Global()
 @Module({

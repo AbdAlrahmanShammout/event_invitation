@@ -1,5 +1,6 @@
 import { HttpStatus } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
+
 import { GeneralTypeException } from '@/common/filter/exception_return_handler/type/general-type.exception';
 
 export function mapPrismaException(exception: any): GeneralTypeException | null {
@@ -7,26 +8,28 @@ export function mapPrismaException(exception: any): GeneralTypeException | null 
   if (exception instanceof Prisma.PrismaClientKnownRequestError) {
     return handleKnownRequestError(exception);
   }
-  
+
   // Handle PrismaClientUnknownRequestError
   if (exception instanceof Prisma.PrismaClientUnknownRequestError) {
     return handleUnknownRequestError(exception);
   }
-  
+
   // Handle PrismaClientValidationError
   if (exception instanceof Prisma.PrismaClientValidationError) {
     return handleValidationError(exception);
   }
-  
+
   // Handle PrismaClientInitializationError
   if (exception instanceof Prisma.PrismaClientInitializationError) {
     return handleInitializationError(exception);
   }
-  
+
   return null;
 }
 
-function handleKnownRequestError(error: Prisma.PrismaClientKnownRequestError): GeneralTypeException {
+function handleKnownRequestError(
+  error: Prisma.PrismaClientKnownRequestError,
+): GeneralTypeException {
   const timestamp = new Date().toISOString();
   let statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
   let message = 'Database operation failed';
@@ -40,60 +43,60 @@ function handleKnownRequestError(error: Prisma.PrismaClientKnownRequestError): G
       code = 'DUPLICATE_ENTRY';
       userFriendly = true;
       break;
-      
+
     case 'P2025': // Record not found
       statusCode = HttpStatus.NOT_FOUND;
       message = 'The requested record was not found';
       code = 'RECORD_NOT_FOUND';
       userFriendly = true;
       break;
-      
+
     case 'P2003': // Foreign key constraint violation
       statusCode = HttpStatus.BAD_REQUEST;
       message = 'Cannot perform operation due to related records';
       code = 'FOREIGN_KEY_VIOLATION';
       userFriendly = true;
       break;
-      
+
     case 'P2014': // Required relation violation
       statusCode = HttpStatus.BAD_REQUEST;
       message = 'Required relationship is missing';
       code = 'REQUIRED_RELATION_VIOLATION';
       userFriendly = true;
       break;
-      
+
     case 'P2021': // Table does not exist
       statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
       message = 'Database schema error';
       code = 'SCHEMA_ERROR';
       break;
-      
+
     case 'P2022': // Column does not exist
       statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
       message = 'Database schema error';
       code = 'SCHEMA_ERROR';
       break;
-      
+
     case 'P2023': // Inconsistent column data
       statusCode = HttpStatus.BAD_REQUEST;
       message = 'Invalid data format provided';
       code = 'INVALID_DATA_FORMAT';
       userFriendly = true;
       break;
-      
+
     case 'P2024': // Connection timeout
       statusCode = HttpStatus.REQUEST_TIMEOUT;
       message = 'Database connection timeout';
       code = 'DATABASE_TIMEOUT';
       break;
-      
+
     default:
       message = `Database error: ${error.message}`;
       code = error.code;
   }
 
-  const detailedMessage = userFriendly 
-    ? message 
+  const detailedMessage = userFriendly
+    ? message
     : `[${timestamp}] Prisma Error ${error.code}: ${error.message} | Meta: ${JSON.stringify(error.meta, null, 2)}`;
 
   return new GeneralTypeException({
@@ -105,9 +108,11 @@ function handleKnownRequestError(error: Prisma.PrismaClientKnownRequestError): G
   });
 }
 
-function handleUnknownRequestError(error: Prisma.PrismaClientUnknownRequestError): GeneralTypeException {
+function handleUnknownRequestError(
+  error: Prisma.PrismaClientUnknownRequestError,
+): GeneralTypeException {
   const timestamp = new Date().toISOString();
-  
+
   return new GeneralTypeException({
     message: `[${timestamp}] Unknown database error: ${error.message}`,
     code: 'UNKNOWN_DATABASE_ERROR',
@@ -127,9 +132,11 @@ function handleValidationError(error: Prisma.PrismaClientValidationError): Gener
   });
 }
 
-function handleInitializationError(error: Prisma.PrismaClientInitializationError): GeneralTypeException {
+function handleInitializationError(
+  error: Prisma.PrismaClientInitializationError,
+): GeneralTypeException {
   const timestamp = new Date().toISOString();
-  
+
   return new GeneralTypeException({
     message: `[${timestamp}] Database connection failed: ${error.message}`,
     code: 'DATABASE_CONNECTION_ERROR',

@@ -1,11 +1,12 @@
+import { Role } from '@prisma/client';
+import { z } from 'zod';
+
 import {
   BaseZodSchema,
-  ZodNumberNullable,
   ZodDateNullable,
+  ZodNumberNullable,
   ZodString,
 } from '@/common/base/base.zod';
-import { z } from 'zod';
-import { Role } from '@prisma/client';
 
 export type UserZodType = z.infer<typeof UserZodSchema>;
 

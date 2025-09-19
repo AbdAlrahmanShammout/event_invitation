@@ -1,8 +1,8 @@
 import { InvitationEntity } from '@/modules/invitation/entity/invitation.entity';
-import { InvitationFullType } from '@/providers/database/prisma/schema-prisma.type';
-import { UserMapper } from '@/modules/user/mapper/user.mapper';
 import { InvitationMessageMapper } from '@/modules/invitation-message/mapper/invitation-message.mapper';
 import { InvitationRecipientMapper } from '@/modules/invitation-recipient/mapper/invitation-recipient.mapper';
+import { UserMapper } from '@/modules/user/mapper/user.mapper';
+import { InvitationFullType } from '@/providers/database/prisma/schema-prisma.type';
 
 export class InvitationMapper {
   static toEntity(schema: InvitationFullType): InvitationEntity {

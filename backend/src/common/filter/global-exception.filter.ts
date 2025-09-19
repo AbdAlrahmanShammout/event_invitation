@@ -1,18 +1,14 @@
-import {
-  ArgumentsHost,
-  Catch,
-  ExceptionFilter,
-  HttpStatus,
-  Injectable,
-} from '@nestjs/common';
+import { ArgumentsHost, Catch, ExceptionFilter, HttpStatus, Injectable } from '@nestjs/common';
 import * as Sentry from '@sentry/node';
+
+import { normalizeException } from '@/common/filter/exception_mappers/exception-mapper';
+import { graphqlExceptionHandler } from '@/common/filter/exception_return_handler/graphql_exception.handler';
+import { httpExceptionHandler } from '@/common/filter/exception_return_handler/http_exception.handler';
+import { GeneralTypeException } from '@/common/filter/exception_return_handler/type/general-type.exception';
 import { AppConfigService } from '@/config/app/app-config.service';
 import { EnvTypes } from '@/config/enviroment';
+
 import { getRequestTypeFromHost, RequestType } from '../helpers/request.helper';
-import { httpExceptionHandler } from '@/common/filter/exception_return_handler/http_exception.handler';
-import { graphqlExceptionHandler } from '@/common/filter/exception_return_handler/graphql_exception.handler';
-import { GeneralTypeException } from '@/common/filter/exception_return_handler/type/general-type.exception';
-import { normalizeException } from '@/common/filter/exception_mappers/exception-mapper';
 
 @Catch()
 @Injectable()
@@ -41,24 +37,18 @@ export class GlobalExceptionFilter implements ExceptionFilter {
   }
 
   private reportErrorToSentry(exception: GeneralTypeException) {
-    if (
-      !exception.userFriendly &&
-      this.appConfigService.env !== EnvTypes.LOCAL
-    ) {
+    if (!exception.userFriendly && this.appConfigService.env !== EnvTypes.LOCAL) {
       Sentry.captureException(exception, { extra: exception as any });
     }
   }
 
   private shouldHideErrorDetails(): boolean {
-    return ![
-      EnvTypes.LOCAL.toString(),
-      EnvTypes.DEVELOPMENT.toString(),
-    ].includes(this.appConfigService.env);
+    return ![EnvTypes.LOCAL.toString(), EnvTypes.DEVELOPMENT.toString()].includes(
+      this.appConfigService.env,
+    );
   }
 
-  private createSafeProductionError(
-    exception: GeneralTypeException,
-  ): GeneralTypeException {
+  private createSafeProductionError(exception: GeneralTypeException): GeneralTypeException {
     const isClientSideError =
       exception.statusCode === HttpStatus.FORBIDDEN ||
       exception.statusCode === HttpStatus.NOT_FOUND;
@@ -66,16 +56,11 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     return new GeneralTypeException({
       message: isClientSideError ? 'not found' : 'Internal server error',
       code: isClientSideError ? 'NOT_FOUND' : 'INTERNAL_SERVER_ERROR',
-      statusCode: isClientSideError
-        ? HttpStatus.NOT_FOUND
-        : HttpStatus.INTERNAL_SERVER_ERROR,
+      statusCode: isClientSideError ? HttpStatus.NOT_FOUND : HttpStatus.INTERNAL_SERVER_ERROR,
     });
   }
 
-  private formatErrorResponse(
-    exception: GeneralTypeException,
-    host: ArgumentsHost,
-  ): any {
+  private formatErrorResponse(exception: GeneralTypeException, host: ArgumentsHost): any {
     switch (getRequestTypeFromHost(host)) {
       case RequestType.HTTP:
         return httpExceptionHandler(exception, host);

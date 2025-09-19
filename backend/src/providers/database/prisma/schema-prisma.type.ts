@@ -73,14 +73,10 @@ export type RecursiveOptional<T> = {
 
   // objects/arrays → make optional
 } & {
-  [K in keyof T as T[K] extends Primitive ? never : K]?:
-  T[K] extends (infer U)[]
-    ? RecursiveOptional<U>[]       // array of recursive optionals
-    : RecursiveOptional<T[K]>;     // recurse into object
+  [K in keyof T as T[K] extends Primitive ? never : K]?: T[K] extends (infer U)[]
+    ? RecursiveOptional<U>[] // array of recursive optionals
+    : RecursiveOptional<T[K]>; // recurse into object
 };
-
-
-
 
 export type UserFullType = RecursiveOptional<
   Prisma.UserGetPayload<{
@@ -92,7 +88,6 @@ export type UserFullType = RecursiveOptional<
   }>
 >;
 
-
 export type HallFullType = RecursiveOptional<
   Prisma.HallGetPayload<{
     include: {
@@ -102,7 +97,6 @@ export type HallFullType = RecursiveOptional<
     };
   }>
 >;
-
 
 export type InvitationFullType = RecursiveOptional<
   Prisma.InvitationGetPayload<{

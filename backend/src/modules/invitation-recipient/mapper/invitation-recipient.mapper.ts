@@ -1,5 +1,5 @@
-import { InvitationRecipientFullType } from '@/providers/database/prisma/schema-prisma.type';
 import { InvitationRecipientEntity } from '@/modules/invitation-recipient/entity/invitation-recipient.entity';
+import { InvitationRecipientFullType } from '@/providers/database/prisma/schema-prisma.type';
 
 export class InvitationRecipientMapper {
   static toEntity(schema: InvitationRecipientFullType): InvitationRecipientEntity {

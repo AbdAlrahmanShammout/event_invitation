@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { UserRepository } from '@/modules/user/repository/user.repository';
-import { CreateUserServiceInput } from '@/modules/user/defs/user-service.defs';
+
 import { hashString } from '@/common/helpers/bcrypt.helper';
+import { CreateUserServiceInput } from '@/modules/user/defs/user-service.defs';
 import { UserEntity } from '@/modules/user/entity/user.entity';
+import { UserRepository } from '@/modules/user/repository/user.repository';
 
 @Injectable()
 export class UserService {

@@ -1,6 +1,7 @@
 import { Global, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import * as Joi from 'joi';
+
 import { JwtConfigService } from './jwt-config.service';
 import configuration from './jwt-configuration';
 

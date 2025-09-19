@@ -1,9 +1,5 @@
-import {
-  HttpStatus,
-  Injectable,
-  ValidationError,
-  ValidationPipe,
-} from '@nestjs/common';
+import { HttpStatus, Injectable, ValidationError, ValidationPipe } from '@nestjs/common';
+
 import {
   ValidationErrorObject,
   ValidationExceptions,
@@ -15,8 +11,7 @@ export class InputValidationPipe extends ValidationPipe {
     super({
       transform: true,
       exceptionFactory: (validationErrors: ValidationError[]) => {
-        const validationErrorsAfterParsed =
-          InputValidationPipe.getFactoryErrors(validationErrors);
+        const validationErrorsAfterParsed = InputValidationPipe.getFactoryErrors(validationErrors);
 
         return new ValidationExceptions({
           message: 'Invalid input',
@@ -28,10 +23,7 @@ export class InputValidationPipe extends ValidationPipe {
     });
   }
 
-  static getFactoryErrors(
-    validationErrors: ValidationError[],
-    parentProperty = '',
-  ) {
+  static getFactoryErrors(validationErrors: ValidationError[], parentProperty = '') {
     const parsedErrors: ValidationErrorObject[] = [];
     for (const validationError of validationErrors) {
       if (validationError.constraints) {
@@ -41,10 +33,7 @@ export class InputValidationPipe extends ValidationPipe {
         });
       } else if (validationError.children && validationError.children.length > 0) {
         parsedErrors.push(
-          ...this.getFactoryErrors(
-            validationError.children,
-            `${validationError.property}.`,
-          ),
+          ...this.getFactoryErrors(validationError.children, `${validationError.property}.`),
         );
       }
     }

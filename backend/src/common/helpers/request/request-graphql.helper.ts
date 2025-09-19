@@ -1,11 +1,13 @@
 import { ArgumentsHost, ExecutionContext } from '@nestjs/common';
 import { Request } from 'express';
+
 import { UserEntity } from '@/modules/user/entity/user.entity';
+
 import {
-  RequestType as BaseRequestType,
-  RequestInfo as BaseRequestInfo,
   getHttpRequestFromContext,
   getHttpRequestFromHost,
+  RequestInfo as BaseRequestInfo,
+  RequestType as BaseRequestType,
 } from './request-base.helper';
 
 /**
@@ -82,9 +84,7 @@ export function getRequestTypeFromContext(context: ExecutionContext): string {
 /**
  * Get user from request using ExecutionContext (supports both HTTP and GraphQL when available)
  */
-export function getUserFromRequestUseContext(
-  context: ExecutionContext,
-): UserEntity {
+export function getUserFromRequestUseContext(context: ExecutionContext): UserEntity {
   return <UserEntity>getRequestFromContext(context).user;
 }
 

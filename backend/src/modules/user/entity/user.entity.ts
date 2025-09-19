@@ -1,6 +1,6 @@
 import { BaseEntity } from '@/common/base/base.entity';
-import { UserZodType } from '@/modules/user/zod/user.zod';
 import { UserRole } from '@/modules/user/enum/general.enum';
+import { UserZodType } from '@/modules/user/zod/user.zod';
 
 export class UserEntity extends BaseEntity {
   name: string;

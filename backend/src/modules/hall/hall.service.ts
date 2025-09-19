@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { HallRepository } from '@/modules/hall/repository/hall.repository';
+
 import { CreateHallServiceInput } from '@/modules/hall/defs/hall-service.defs';
+import { HallRepository } from '@/modules/hall/repository/hall.repository';
 
 @Injectable()
 export class HallService {

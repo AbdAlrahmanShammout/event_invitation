@@ -1,5 +1,6 @@
 import { ArgumentsHost, ExecutionContext } from '@nestjs/common';
 import { Request } from 'express';
+
 import { UserEntity } from '@/modules/user/entity/user.entity';
 
 /**
@@ -45,9 +46,7 @@ export function getRequestTypeFromContext(context: ExecutionContext): string {
 /**
  * Get user from HTTP request using ExecutionContext
  */
-export function getUserFromHttpRequestUseContext(
-  context: ExecutionContext,
-): UserEntity {
+export function getUserFromHttpRequestUseContext(context: ExecutionContext): UserEntity {
   return <UserEntity>getHttpRequestFromContext(context).user;
 }
 
@@ -85,11 +84,11 @@ export class RequestInfo {
   }
 
   getIp(): string {
-    return this.request['ip'] || this.request.ip || "unknown";
+    return this.request['ip'] || this.request.ip || 'unknown';
   }
 
   getUserAgent(): string | string[] {
-    return this.request.headers['user-agent'] || "unknown";
+    return this.request.headers['user-agent'] || 'unknown';
   }
 
   getMethod(): string {
