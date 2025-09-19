@@ -3,18 +3,14 @@ import { AppModule } from './app.module';
 import { AppConfigService } from '@/config/app/app-config.service';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import {SwaggerProvider} from "@/providers/swagger/swagger.provider";
+import {InputValidationPipe} from "@/common/pipes/input-validation.pipe";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.enableCors();
+  app.useGlobalPipes(new InputValidationPipe());
 
-  // Global validation pipe
-  app.useGlobalPipes(new ValidationPipe({
-    whitelist: true,
-    forbidNonWhitelisted: true,
-    transform: true,
-  }));
 
   SwaggerProvider.setupSwagger(app);
 
