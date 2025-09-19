@@ -39,7 +39,7 @@ export class InputValidationPipe extends ValidationPipe {
           property: `${parentProperty}${validationError.property}`,
           validationErrors: Object.values(validationError.constraints),
         });
-      } else {
+      } else if (validationError.children && validationError.children.length > 0) {
         parsedErrors.push(
           ...this.getFactoryErrors(
             validationError.children,
