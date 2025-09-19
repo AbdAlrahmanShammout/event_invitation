@@ -23,12 +23,13 @@ let GqlExecutionContext: any;
 let hasGraphQL = false;
 
 try {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const graphqlModule = require('@nestjs/graphql');
   GqlArgumentsHost = graphqlModule.GqlArgumentsHost;
   GqlContextType = graphqlModule.GqlContextType;
   GqlExecutionContext = graphqlModule.GqlExecutionContext;
   hasGraphQL = true;
-} catch (error) {
+} catch (_error) {
   // GraphQL not available, functions will fall back to HTTP-only
   hasGraphQL = false;
 }
