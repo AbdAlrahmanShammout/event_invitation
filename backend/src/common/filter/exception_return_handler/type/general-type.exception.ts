@@ -9,7 +9,7 @@ export interface IGeneralTypeException {
 }
 
 export class GeneralTypeException extends AppException {
-  stack: string;
+  stack?: string;
 
   constructor(data: IGeneralTypeException) {
     const { message, code, statusCode, stack, userFriendly } = data;

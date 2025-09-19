@@ -8,10 +8,12 @@ import {
 } from '@nestjs/common';
 import { ZodError } from 'zod';
 import { mapAxiosErrorException } from '@/common/filter/exception_mappers/axios-error-handler';
+import { mapPrismaException } from '@/common/filter/exception_mappers/prisma-exception-handler';
 // Updated function names for better clarity
 
 function tryMapSpecialExceptions(exception: any): GeneralTypeException | null {
   return (
+    mapPrismaException(exception) ||
     // mapSequelizeException(exception) ||
     // mapCaslForbiddenException(exception) ||
     // mapApolloErrorException(exception) ||
