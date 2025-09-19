@@ -23,11 +23,6 @@ export function mapPrismaException(exception: any): GeneralTypeException | null 
     return handleInitializationError(exception);
   }
   
-  // Handle NotFoundError
-  if (exception instanceof Prisma.NotFoundError) {
-    return handleNotFoundError(exception);
-  }
-  
   return null;
 }
 
@@ -141,16 +136,6 @@ function handleInitializationError(error: Prisma.PrismaClientInitializationError
     statusCode: HttpStatus.SERVICE_UNAVAILABLE,
     stack: error.stack,
     userFriendly: false,
-  });
-}
-
-function handleNotFoundError(error: Prisma.NotFoundError): GeneralTypeException {
-  return new GeneralTypeException({
-    message: 'The requested resource was not found',
-    code: 'RESOURCE_NOT_FOUND',
-    statusCode: HttpStatus.NOT_FOUND,
-    stack: error.stack,
-    userFriendly: true,
   });
 }
 

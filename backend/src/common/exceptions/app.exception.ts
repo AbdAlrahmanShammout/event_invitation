@@ -15,7 +15,7 @@ export class AppException extends Error {
   constructor(data: IAppException) {
     const {
       message,
-      code,
+      code = "UNKNOWN_CODE",
       statusCode = HttpStatus.BAD_REQUEST,
       userFriendly,
     } = data;
