@@ -8,6 +8,7 @@ export class UserEntity extends BaseEntity {
   hallId?: number;
   role: UserRole;
   lastLoginAt?: Date;
+  passwordHash: string;
 
   constructor(data: UserZodType) {
     super();

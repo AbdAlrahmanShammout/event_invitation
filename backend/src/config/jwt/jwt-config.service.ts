@@ -11,6 +11,15 @@ export class JwtConfigService extends BaseConfigService {
   get jwtAuthTokenExpiresIn(): string {
     return this.getValue<string>('jwt.auth-token.jwtAuthTokenExpiresIn');
   }
+
+  get jwtResetPasswordTokenSecretKey(): string {
+    return this.getValue<string>('jwt.auth-token.jwtResetPasswordTokenSecretKey');
+  }
+
+  get jwtResetPasswordTokenExpiresIn(): string {
+    return this.getValue<string>('jwt.auth-token.jwtResetPasswordTokenExpiresIn');
+  }
+
   //
   // get jwtRefreshTokenSecretKey(): string {
   //   return this.getValue<string>('jwt.refresh-token.jwtRefreshTokenSecretKey');

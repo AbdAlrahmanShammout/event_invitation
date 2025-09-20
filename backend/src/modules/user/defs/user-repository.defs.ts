@@ -7,3 +7,8 @@ export type CreateUserRepoInput = {
   role: UserRole;
   passwordHash: string;
 };
+
+export type UpdatePasswordRepoInput = {
+  id: number;
+  passwordHash: string;
+};

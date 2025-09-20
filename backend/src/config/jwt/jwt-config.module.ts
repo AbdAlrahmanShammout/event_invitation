@@ -13,6 +13,8 @@ import configuration from './jwt-configuration';
       validationSchema: Joi.object({
         JWT_AUTH_TOKEN_SECRET_KEY: Joi.string().required(),
         JWT_AUTH_TOKEN_EXPIRES_IN: Joi.string().required(),
+        JWT_RESET_PASSWORD_TOKEN_SECRET_KEY: Joi.string().required(),
+        JWT_RESET_PASSWORD_TOKEN_EXPIRES_IN: Joi.string().required(),
         // JWT_REFRESH_TOKEN_SECRET_KEY: Joi.string().required(),
         // JWT_REFRESH_TOKEN_EXPIRES_IN: Joi.string().required(),
         // JWT_INVITE_TOKEN_SECRET_KEY: Joi.string().required(),

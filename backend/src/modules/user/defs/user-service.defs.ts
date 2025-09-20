@@ -7,3 +7,8 @@ export type CreateUserServiceInput = {
   role: UserRole;
   password: string;
 };
+
+export type UpdatePasswordServiceInput = {
+  id: number;
+  password: string;
+};
