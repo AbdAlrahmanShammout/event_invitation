@@ -5,12 +5,14 @@ import { InvitationRecipientZodType } from '@/modules/invitation-recipient/zod/i
 
 export class InvitationRecipientEntity extends BaseEntity {
   invitationId: number;
-  invitationMessageId: number;
+  invitationMessageId?: number;
   recipientName: string;
   phoneNumber: string;
   messageStatus: MessageStatus;
-  sendAt: Date;
+  sendAt?: Date;
   sentAt?: Date;
+  submittedAt?: Date;
+  notes?: string;
 
   constructor(props: InvitationRecipientZodType) {
     super();

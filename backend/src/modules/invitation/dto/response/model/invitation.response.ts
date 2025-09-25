@@ -21,6 +21,12 @@ export class InvitationResponse extends BaseModelResponseDto {
   description?: string;
 
   @ApiProperty({
+    description: 'Maximum number of guests allowed',
+    example: 100,
+  })
+  maxGuestsAllowed: number;
+
+  @ApiProperty({
     description: 'Event date',
     example: '2024-12-25T18:00:00.000Z',
     type: 'string',
@@ -39,6 +45,14 @@ export class InvitationResponse extends BaseModelResponseDto {
     example: 1,
   })
   creatorId: number;
+
+  @ApiProperty({
+    description: 'Submission deadline',
+    example: '2024-12-20T23:59:59.000Z',
+    type: 'string',
+    format: 'date-time',
+  })
+  submissionDeadline?: Date;
 
   @ApiProperty({
     description: 'Creator information',
@@ -65,7 +79,9 @@ export class InvitationResponse extends BaseModelResponseDto {
     super(data);
     this.title = data.title;
     this.description = data.description;
+    this.maxGuestsAllowed = data.maxGuestsAllowed;
     this.eventDate = data.eventDate;
+    this.submissionDeadline = data.submissionDeadline;
     this.hallId = data.hallId;
     this.creatorId = data.creatorId;
 

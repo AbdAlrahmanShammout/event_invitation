@@ -25,4 +25,18 @@ export class HallPrismaReposiory implements HallRepository {
 
     return HallMapper.toEntity(result);
   }
+
+  async findById(id: number): Promise<HallEntity | null> {
+    const result = await this.prismaService.hall.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!result) {
+      return null;
+    }
+
+    return HallMapper.toEntity(result);
+  }
 }

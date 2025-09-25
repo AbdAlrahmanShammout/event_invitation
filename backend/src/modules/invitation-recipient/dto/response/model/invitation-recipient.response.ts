@@ -14,8 +14,9 @@ export class InvitationRecipientResponse extends BaseModelResponseDto {
   @ApiProperty({
     description: 'ID of the invitation message sent to this recipient',
     example: 1,
+    required: false,
   })
-  invitationMessageId: number;
+  invitationMessageId?: number;
 
   @ApiProperty({
     description: 'Name of the recipient',
@@ -41,8 +42,9 @@ export class InvitationRecipientResponse extends BaseModelResponseDto {
     example: '2024-12-25T10:00:00.000Z',
     type: 'string',
     format: 'date-time',
+    required: false,
   })
-  sendAt: Date;
+  sendAt?: Date;
 
   @ApiProperty({
     description: 'Actual time the message was sent',
@@ -53,6 +55,22 @@ export class InvitationRecipientResponse extends BaseModelResponseDto {
   })
   sentAt?: Date;
 
+  @ApiProperty({
+    description: 'Time when submitted via mobile app',
+    example: '2024-12-20T15:30:00.000Z',
+    type: 'string',
+    format: 'date-time',
+    required: false,
+  })
+  submittedAt?: Date;
+
+  @ApiProperty({
+    description: 'Notes from mobile submission',
+    example: 'Close friend from university',
+    required: false,
+  })
+  notes?: string;
+
   constructor(data: InvitationRecipientEntity) {
     super(data);
     this.invitationId = data.invitationId;
@@ -62,5 +80,7 @@ export class InvitationRecipientResponse extends BaseModelResponseDto {
     this.messageStatus = data.messageStatus;
     this.sendAt = data.sendAt;
     this.sentAt = data.sentAt;
+    this.submittedAt = data.submittedAt;
+    this.notes = data.notes;
   }
 }

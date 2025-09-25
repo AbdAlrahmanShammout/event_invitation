@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
-import { IsDateString, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsDateString, IsNotEmpty, IsNumber, IsOptional, IsString, Min } from 'class-validator';
 
 export class CreateInvitationRequestDto {
   @ApiProperty({
@@ -29,4 +29,13 @@ export class CreateInvitationRequestDto {
   @IsDateString()
   @Transform(({ value }) => new Date(value))
   eventDate: Date;
+
+  @ApiProperty({
+    description: 'Maximum number of guests allowed for this invitation',
+    example: 200,
+  })
+  @Transform(({ value }) => parseInt(value))
+  @IsNumber()
+  @Min(1)
+  maxGuestsAllowed: number;
 }

@@ -8,12 +8,14 @@ export class InvitationRecipientMapper {
       createdAt: schema.createdAt,
       updatedAt: schema.updatedAt,
       invitationId: schema.invitationId,
-      invitationMessageId: schema.invitationMessageId,
+      invitationMessageId: schema.invitationMessageId || undefined,
       recipientName: schema.recipientName,
       phoneNumber: schema.phoneNumber,
       messageStatus: schema.messageStatus,
-      sendAt: schema.sendAt,
-      sentAt: schema.sentAt,
+      sendAt: schema.sendAt || undefined,
+      sentAt: schema.sentAt || undefined,
+      submittedAt: schema.submittedAt || undefined,
+      notes: schema.notes || undefined,
     });
   }
 }

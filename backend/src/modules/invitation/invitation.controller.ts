@@ -77,6 +77,7 @@ export class InvitationController {
       title: createInvitationDto.title,
       description: createInvitationDto.description,
       eventDate: createInvitationDto.eventDate,
+      maxGuestsAllowed: createInvitationDto.maxGuestsAllowed,
       hallId: currentUser.hallId,
       creatorId: currentUser.id,
     });
@@ -249,5 +250,73 @@ export class InvitationController {
     }
 
     await this.invitationService.deleteInvitation(id, currentUser.hallId);
+  }
+
+  @Post(':id/generate-qr')
+  @ApiOperation({
+    summary: 'Generate QR code for mobile access',
+    description:
+      'Generates a QR code that allows mobile app users to access and submit guests for this invitation',
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'Invitation ID',
+    type: 'number',
+    example: 1,
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'QR code generated successfully',
+    schema: {
+      type: 'object',
+      properties: {
+        qrData: {
+          type: 'object',
+          properties: {
+            invitationId: { type: 'number', example: 123 },
+            accessToken: { type: 'string', example: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...' },
+            appUrl: { type: 'string', example: 'https://app.yourplatform.com/invitation/access' },
+          },
+        },
+        qrCodeString: {
+          type: 'string',
+          example: '{"invitationId":123,"accessToken":"eyJ...","appUrl":"https://..."}',
+        },
+        expiresAt: { type: 'string', format: 'date-time', example: '2024-12-31T23:59:59.000Z' },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized - Authentication required',
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden - User must be associated with a hall',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Invitation not found',
+  })
+  async generateQRCode(
+    @Param('id', ParseIntPipe) id: number,
+    @LoggedInUser() currentUser: UserEntity,
+  ) {
+    if (!currentUser.hallId) {
+      throw new ForbiddenException('User must be associated with a hall to generate QR codes');
+    }
+
+    const qrResult = await this.invitationService.generateQRCode({
+      invitationId: id,
+      hallId: currentUser.hallId,
+      grantedBy: currentUser.id,
+    });
+
+    return {
+      qrData: qrResult.qrData,
+      qrCodeString: JSON.stringify(qrResult.qrData),
+      expiresAt: qrResult.expiresAt,
+      message: 'QR code generated successfully',
+    };
   }
 }

@@ -30,12 +30,14 @@ enum HallStatus {
 }
 
 enum MessageStatus {
+  holding
   pending
   sent
   delivered
   read
   failed
 }
+
 
 // =======================
 // MODELS
@@ -74,22 +76,24 @@ model Hall {
   updatedAt   DateTime   @updatedAt @map("updated_at")
 
   // Relations
-  owner       User       @relation("HallOwner", fields: [ownerId], references: [id])
-  employees   User[]     @relation("HallEmployees")
-  invitations Invitation[]
+  owner           User              @relation("HallOwner", fields: [ownerId], references: [id])
+  employees       User[]            @relation("HallEmployees")
+  invitations     Invitation[]
+  whatsappSession WhatsAppSession?
 
   @@map("halls")
 }
 
 model Invitation {
-  id          Int         @id @default(autoincrement())
-  title       String
-  description String?
-  eventDate   DateTime    @map("event_date")
-  hallId      Int         @map("hall_id")
-  creatorId   Int         @map("creator_id")
-  createdAt   DateTime    @default(now()) @map("created_at")
-  updatedAt   DateTime    @updatedAt @map("updated_at")
+  id              Int         @id @default(autoincrement())
+  title           String
+  description     String?
+  eventDate       DateTime    @map("event_date")
+  maxGuestsAllowed Int        @map("max_guests_allowed")
+  hallId          Int         @map("hall_id")
+  creatorId       Int         @map("creator_id")
+  createdAt       DateTime    @default(now()) @map("created_at")
+  updatedAt       DateTime    @updatedAt @map("updated_at")
 
   // Relations
   hall        Hall        @relation(fields: [hallId], references: [id])
@@ -117,18 +121,39 @@ model InvitationMessage {
 model InvitationRecipient {
   id                  Int             @id @default(autoincrement())
   invitationId        Int             @map("invitation_id")
-  invitationMessageId Int             @map("invitation_message_id")
+  invitationMessageId Int?            @map("invitation_message_id") // Make optional for mobile submissions
   recipientName       String          @map("recipient_name")
   phoneNumber         String          @map("phone_number")
-  messageStatus       MessageStatus   @default(pending) @map("message_status")
-  sendAt              DateTime        @map("send_at")
+  messageStatus       MessageStatus   @default(holding) @map("message_status")
+  sendAt              DateTime?       @map("send_at") // Make optional for mobile submissions
   sentAt              DateTime?       @map("sent_at")
+  submittedAt         DateTime?       @map("submitted_at") // New field for mobile submissions
+  notes               String?         // New field for mobile submission notes
   createdAt           DateTime        @default(now()) @map("created_at")
   updatedAt           DateTime        @updatedAt @map("updated_at")
 
   // Relations
-  invitation        Invitation        @relation(fields: [invitationId], references: [id])
-  invitationMessage InvitationMessage @relation(fields: [invitationMessageId], references: [id])
+  invitation        Invitation         @relation(fields: [invitationId], references: [id])
+  invitationMessage InvitationMessage? @relation(fields: [invitationMessageId], references: [id])
 
   @@map("invitation_recipient")
 }
+
+model WhatsAppSession {
+  id          Int        @id @default(autoincrement())
+  hallId      Int        @unique @map("hall_id")
+  sessionId   String     @unique @map("session_id")
+  isActive    Boolean    @default(false) @map("is_active")
+  qrCode      String?    @map("qr_code")
+  phoneNumber String?    @map("phone_number")
+  sessionData Json?      @map("session_data")
+  lastSeen    DateTime?  @map("last_seen")
+  createdAt   DateTime   @default(now()) @map("created_at")
+  updatedAt   DateTime   @updatedAt @map("updated_at")
+
+  // Relations
+  hall        Hall       @relation(fields: [hallId], references: [id])
+
+  @@map("whatsapp_sessions")
+}
+

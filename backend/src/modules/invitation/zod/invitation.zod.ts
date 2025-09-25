@@ -17,6 +17,7 @@ export const InvitationZodSchema = BaseZodSchema.extend({
   title: ZodString,
   description: ZodStringNullable,
   eventDate: ZodDate,
+  maxGuestsAllowed: ZodNumber,
   hallId: ZodNumber,
   creatorId: ZodNumber,
 

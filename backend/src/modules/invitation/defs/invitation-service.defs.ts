@@ -2,6 +2,7 @@ export type CreateInvitationServiceInput = {
   title: string;
   description?: string;
   eventDate: Date;
+  maxGuestsAllowed: number;
   hallId: number;
   creatorId: number;
 };

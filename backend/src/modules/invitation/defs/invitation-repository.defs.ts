@@ -2,6 +2,7 @@ export type CreateInvitationRepoInput = {
   title: string;
   description?: string;
   eventDate: Date;
+  maxGuestsAllowed: number;
   hallId: number;
   creatorId: number;
 };
@@ -11,6 +12,7 @@ export type UpdateInvitationRepoInput = {
   title?: string;
   description?: string;
   eventDate?: Date;
+  maxGuestsAllowed?: number;
 };
 
 export type GetInvitationRepoInput = {

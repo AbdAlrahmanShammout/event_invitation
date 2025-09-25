@@ -13,6 +13,7 @@ export class InvitationMapper {
       title: schema.title,
       description: schema.description,
       eventDate: schema.eventDate,
+      maxGuestsAllowed: schema.maxGuestsAllowed,
       hallId: schema.hallId,
       creatorId: schema.creatorId,
       creator: schema.creator ? UserMapper.toEntity(schema.creator) : null,

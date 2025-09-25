@@ -7,16 +7,19 @@ import {
   ZodDateNullable,
   ZodNumber,
   ZodString,
+  ZodStringNullable,
 } from '@/common/base/base.zod';
 
 export type InvitationRecipientZodType = z.infer<typeof InvitationRecipientZodSchema>;
 
 export const InvitationRecipientZodSchema = BaseZodSchema.extend({
   invitationId: ZodNumber,
-  invitationMessageId: ZodNumber,
+  invitationMessageId: ZodNumber.optional(),
   recipientName: ZodString,
   phoneNumber: ZodString,
   messageStatus: z.nativeEnum(MessageStatus).default(MessageStatus.pending),
-  sendAt: ZodDate,
+  sendAt: ZodDateNullable,
   sentAt: ZodDateNullable,
+  submittedAt: ZodDateNullable,
+  notes: ZodStringNullable,
 });

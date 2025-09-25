@@ -8,18 +8,57 @@ export class JwtTokenService {
 
   async createJwtToken<T extends string | Buffer | object>(
     payload: T,
-    secret?: string,
+    secretOrOptions?:
+      | string
+      | {
+          secret?: string;
+          expiresIn?: number | string;
+          issuer?: string;
+          audience?: string;
+        },
     expiresIn?: number | string,
   ) {
+    // Backward compatibility: handle old signature (payload, secret, expiresIn)
+    if (typeof secretOrOptions === 'string') {
+      return this.jwtService.sign(payload as string, {
+        secret: secretOrOptions,
+        ...(expiresIn && { expiresIn }),
+      });
+    }
+
+    // New signature: (payload, options)
+    const options = secretOrOptions || {};
     return this.jwtService.sign(payload as string, {
-      ...(secret && { secret }),
-      ...(expiresIn && { expiresIn }),
+      ...(options.secret && { secret: options.secret }),
+      ...(options.expiresIn && { expiresIn: options.expiresIn }),
+      ...(options.issuer && { issuer: options.issuer }),
+      ...(options.audience && { audience: options.audience }),
     });
   }
 
-  async verifyJWTToken<T extends object = any>(token: string, secret?: string) {
+  async verifyJWTToken<T extends object = any>(
+    token: string,
+    secretOrOptions?:
+      | string
+      | {
+          secret?: string;
+          issuer?: string;
+          audience?: string;
+        },
+  ) {
     try {
-      return this.jwtService.verify<T>(token, { secret });
+      // Backward compatibility: handle old signature (token, secret)
+      if (typeof secretOrOptions === 'string') {
+        return this.jwtService.verify<T>(token, { secret: secretOrOptions });
+      }
+
+      // New signature: (token, options)
+      const options = secretOrOptions || {};
+      return this.jwtService.verify<T>(token, {
+        ...(options.secret && { secret: options.secret }),
+        ...(options.issuer && { issuer: options.issuer }),
+        ...(options.audience && { audience: options.audience }),
+      });
     } catch (error) {
       throw new JwtInvalidException(error.name == 'TokenExpiredError');
     }

@@ -21,6 +21,7 @@ export class InvitationPrismaRepository implements InvitationRepository {
         title: input.title,
         description: input.description,
         eventDate: input.eventDate,
+        maxGuestsAllowed: input.maxGuestsAllowed,
         hallId: input.hallId,
         creatorId: input.creatorId,
       },
@@ -85,6 +86,10 @@ export class InvitationPrismaRepository implements InvitationRepository {
 
     if (input.eventDate !== undefined) {
       updateData.eventDate = input.eventDate;
+    }
+
+    if (input.maxGuestsAllowed !== undefined) {
+      updateData.maxGuestsAllowed = input.maxGuestsAllowed;
     }
 
     const result = await this.prismaService.invitation.update({

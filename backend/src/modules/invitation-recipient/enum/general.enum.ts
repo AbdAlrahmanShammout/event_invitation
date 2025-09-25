@@ -1,4 +1,5 @@
 export enum MessageStatus {
+  HOLDING = 'holding',
   PENDING = 'pending',
   SENT = 'sent',
   DELIVERED = 'delivered',
