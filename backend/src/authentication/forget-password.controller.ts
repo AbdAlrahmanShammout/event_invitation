@@ -1,5 +1,5 @@
 import { Body, Controller, HttpStatus, Post } from '@nestjs/common';
-import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { RequestForgetPasswordDto } from '@/authentication/dto/request/request-forget-password.dto';
 import { ResetPasswordDto } from '@/authentication/dto/request/reset-password.dto';
 import { VerifyResetPasswordTokenDto } from '@/authentication/dto/request/verify-reset-password-token.dto';
@@ -23,6 +23,15 @@ export class ForgetPasswordController {
 
   @ApiOperation({ summary: 'Request forget password' })
   @ApiBody({ type: RequestForgetPasswordDto })
+  @ApiResponse({
+    status: 200,
+    description: 'Password reset request processed successfully',
+    type: BaseMessageResponse,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad request - Invalid email format',
+  })
   @PublicRoute()
   @Post('forget')
   async forget(
@@ -41,6 +50,19 @@ export class ForgetPasswordController {
 
   @ApiOperation({ summary: 'Verify reset password token' })
   @ApiBody({ type: VerifyResetPasswordTokenDto })
+  @ApiResponse({
+    status: 200,
+    description: 'Token verified successfully',
+    type: BaseMessageResponse,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad request - Invalid token or user ID',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized - Token expired or invalid',
+  })
   @PublicRoute()
   @Post('verify-token')
   async verifyResetPasswordToken(
@@ -65,6 +87,19 @@ export class ForgetPasswordController {
 
   @ApiOperation({ summary: 'Reset password' })
   @ApiBody({ type: ResetPasswordDto })
+  @ApiResponse({
+    status: 200,
+    description: 'Password reset successfully',
+    type: BaseMessageResponse,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad request - Invalid token, user ID, or password format',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized - Token expired or invalid',
+  })
   @PublicRoute()
   @Post('reset')
   async reset(

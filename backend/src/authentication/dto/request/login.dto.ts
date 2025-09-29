@@ -4,6 +4,11 @@ import { Transform, TransformFnParams } from 'class-transformer';
 import { trimAndRemoveExtraWhiteSpaces } from '@/common/helpers/string.helper';
 
 export class LoginDto {
+  @ApiProperty({
+    description: 'User email address',
+    example: 'user@example.com',
+    format: 'email',
+  })
   @IsString()
   @IsEmail()
   @IsNotEmpty()
