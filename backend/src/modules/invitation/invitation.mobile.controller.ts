@@ -28,6 +28,7 @@ import { CreateInvitationMessageDto } from '@/modules/invitation-message/dto/cre
 import { UpdateInvitationMessageDto } from '@/modules/invitation-message/dto/update-invitation-message.dto';
 import { InvitationMessagesListResponseDto } from '@/modules/invitation-message/dto/response/invitation-messages-list.response.dto';
 import { InvitationMessageResponse } from '@/modules/invitation-message/dto/response/model/invitation-message.response';
+import { LinkRecipientsToMessageRequestDto } from '@/modules/invitation-recipient/dto/request/link-recipients-to-message.request.dto';
 
 @ApiTags('invitation-mobile')
 @Controller('invitation')
@@ -398,5 +399,47 @@ export class InvitationMobileController {
   ): Promise<BaseMessageResponse> {
     await this.invitationMessageService.deleteMessage(messageId, mobileAuth.invitationId);
     return new BaseMessageResponse('Message deleted successfully');
+  }
+
+  @Post('link-recipients-to-message')
+  @RequireMobilePermission('link_recipients')
+  @ApiOperation({
+    summary: 'Link recipients to message',
+    description: 'Links multiple recipients to a specific message for bulk operations',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Recipients successfully linked to message',
+    type: BaseMessageResponse,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad Request - Invalid data or recipients/message not found',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized - Invalid or expired token',
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden - Missing required permission',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Not Found - Message or recipients not found',
+  })
+  async linkRecipientsToMessage(
+    @Body() linkDto: LinkRecipientsToMessageRequestDto,
+    @MobileAuth() mobileAuth: MobileTokenPayload,
+  ): Promise<BaseMessageResponse> {
+    await this.invitationRecipientService.linkRecipientsToMessage({
+      messageId: linkDto.messageId,
+      recipientIds: linkDto.recipientIds,
+      invitationId: mobileAuth.invitationId,
+    });
+
+    return new BaseMessageResponse(
+      `Successfully linked ${linkDto.recipientIds.length} recipients to message`,
+    );
   }
 }

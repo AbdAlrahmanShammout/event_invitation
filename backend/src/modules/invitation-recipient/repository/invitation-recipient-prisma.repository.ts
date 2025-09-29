@@ -112,4 +112,18 @@ export class InvitationRecipientPrismaRepository implements InvitationRecipientR
       },
     });
   }
+
+  async linkRecipientsToMessage(input: {
+    messageId: number;
+    recipientIds: number[];
+  }): Promise<void> {
+    await this.prismaService.invitationRecipient.updateMany({
+      where: {
+        id: { in: input.recipientIds },
+      },
+      data: {
+        invitationMessageId: input.messageId,
+      },
+    });
+  }
 }

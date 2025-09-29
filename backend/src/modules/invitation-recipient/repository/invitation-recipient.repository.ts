@@ -32,4 +32,9 @@ export abstract class InvitationRecipientRepository {
   ): Promise<InvitationRecipientEntity>;
 
   abstract deleteRecipient(recipientId: number): Promise<void>;
+
+  abstract linkRecipientsToMessage(input: {
+    messageId: number;
+    recipientIds: number[];
+  }): Promise<void>;
 }

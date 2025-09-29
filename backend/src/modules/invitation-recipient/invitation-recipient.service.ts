@@ -7,10 +7,14 @@ import { MessageStatus } from '@/modules/invitation-recipient/enum/general.enum'
 import { MobileRecipientDto } from '@/modules/invitation/dto/request/add-recipients-request.dto';
 import { InvitationRecipientRepository } from '@/modules/invitation-recipient/repository/invitation-recipient.repository';
 import { InvitationRecipientEntity } from '@/modules/invitation-recipient/entity/invitation-recipient.entity';
+import { InvitationMessageRepository } from '@/modules/invitation-message/repository/invitation-message.repository';
 
 @Injectable()
 export class InvitationRecipientService {
-  constructor(private readonly invitationRecipientRepository: InvitationRecipientRepository) {}
+  constructor(
+    private readonly invitationRecipientRepository: InvitationRecipientRepository,
+    private readonly invitationMessageRepository: InvitationMessageRepository,
+  ) {}
 
   async addRecipients(input: {
     invitationId: number;
@@ -95,5 +99,47 @@ export class InvitationRecipientService {
    */
   async deleteRecipient(recipientId: number): Promise<void> {
     await this.invitationRecipientRepository.deleteRecipient(recipientId);
+  }
+
+  /**
+   * Links multiple recipients to a message
+   * @param input - Contains messageId and array of recipientIds
+   */
+  async linkRecipientsToMessage(input: {
+    messageId: number;
+    recipientIds: number[];
+    invitationId: number;
+  }): Promise<void> {
+    // Validate that the message exists and belongs to the invitation
+    const message = await this.invitationMessageRepository.findById(input.messageId);
+    if (!message) {
+      throw new NotFoundException('Message not found');
+    }
+
+    if (message.invitationId !== input.invitationId) {
+      throw new BadRequestException('Message does not belong to this invitation');
+    }
+
+    // Validate that all recipients exist and belong to the invitation
+    const existingRecipients = await this.invitationRecipientRepository.findRecipientsByInvitation(
+      input.invitationId,
+    );
+    const existingRecipientIds = existingRecipients.map((recipient) => recipient.id);
+
+    const invalidRecipientIds = input.recipientIds.filter(
+      (id) => !existingRecipientIds.includes(id),
+    );
+
+    if (invalidRecipientIds.length > 0) {
+      throw new BadRequestException(
+        `Recipients with IDs [${invalidRecipientIds.join(', ')}] do not exist or do not belong to this invitation`,
+      );
+    }
+
+    // Link recipients to message
+    await this.invitationRecipientRepository.linkRecipientsToMessage({
+      messageId: input.messageId,
+      recipientIds: input.recipientIds,
+    });
   }
 }

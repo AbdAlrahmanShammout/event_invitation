@@ -6,10 +6,10 @@ import { InvitationRecipientRepository } from '@/modules/invitation-recipient/re
 import { InvitationRecipientPrismaRepository } from '@/modules/invitation-recipient/repository/invitation-recipient-prisma.repository';
 import { DatabaseProviderModule } from '@/providers/database/database-provider.module';
 import { InvitationModule } from '@/modules/invitation/invitation.module';
-import { MobileModule } from '@/modules/mobile/mobile.module';
+import { InvitationMessageModule } from '@/modules/invitation-message/invitation-message.module';
 
 @Module({
-  imports: [DatabaseProviderModule, InvitationModule, MobileModule],
+  imports: [DatabaseProviderModule, InvitationModule, InvitationMessageModule],
   controllers: [InvitationRecipientController],
   providers: [
     InvitationRecipientService,
