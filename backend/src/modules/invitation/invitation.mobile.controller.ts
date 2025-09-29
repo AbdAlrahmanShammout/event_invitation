@@ -15,7 +15,7 @@ import { ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { MobileAuth } from '@/common/decorators/requests/mobile-auth.decorator';
 import { MobileAuthGuard, RequireMobilePermission } from '@/common/guards/mobile-auth.guard';
 import { InvitationService } from '@/modules/invitation/invitation.service';
-import type { MobileTokenPayload } from '@/modules/mobile/types/mobile-token-payload.type';
+import type { MobileTokenPayload } from '@/modules/invitation/types/mobile-token-payload.type';
 import { AddRecipientsRequestDto } from '@/modules/invitation/dto/request/add-recipients-request.dto';
 import { InvitationRecipientService } from '@/modules/invitation-recipient/invitation-recipient.service';
 import { InvitationDetailsResponseDto } from '@/modules/invitation/dto/response/invitation-details.response.dto';
@@ -23,6 +23,11 @@ import { InvitationRecipientsListResponseDto } from '@/modules/invitation/dto/re
 import { BaseMessageResponse } from '@/common/base/base-message.response';
 import { UpdateRecipientRequestDto } from '@/modules/invitation-recipient/dto/request/update-recipient.request.dto';
 import { InvitationRecipientResponse } from '@/modules/invitation-recipient/dto/response/model/invitation-recipient.response';
+import { InvitationMessageService } from '@/modules/invitation-message/invitation-message.service';
+import { CreateInvitationMessageDto } from '@/modules/invitation-message/dto/create-invitation-message.dto';
+import { UpdateInvitationMessageDto } from '@/modules/invitation-message/dto/update-invitation-message.dto';
+import { InvitationMessagesListResponseDto } from '@/modules/invitation-message/dto/response/invitation-messages-list.response.dto';
+import { InvitationMessageResponse } from '@/modules/invitation-message/dto/response/model/invitation-message.response';
 
 @ApiTags('invitation-mobile')
 @Controller('invitation')
@@ -37,6 +42,7 @@ export class InvitationMobileController {
   constructor(
     private readonly invitationService: InvitationService,
     private readonly invitationRecipientService: InvitationRecipientService,
+    private readonly invitationMessageService: InvitationMessageService,
   ) {}
 
   @Get('test')
@@ -254,4 +260,143 @@ export class InvitationMobileController {
   }
 
   // todo check if invitation is active or deadline for update, delete and add
+
+  @Get('messages')
+  @RequireMobilePermission('read_invitation')
+  @ApiOperation({
+    summary: 'Get all messages for the invitation',
+    description: 'Returns a list of all messages created for this invitation',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Messages retrieved successfully',
+    type: InvitationMessagesListResponseDto,
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized - Invalid or expired token',
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden - Missing required permission',
+  })
+  async getMessages(
+    @MobileAuth() mobileAuth: MobileTokenPayload,
+  ): Promise<InvitationMessagesListResponseDto> {
+    const messages = await this.invitationMessageService.getInvitationMessages(
+      mobileAuth.invitationId,
+    );
+
+    return new InvitationMessagesListResponseDto({
+      messages,
+      total: messages.length,
+    });
+  }
+
+  @Post('message')
+  @RequireMobilePermission('create_message')
+  @ApiOperation({
+    summary: 'Create invitation message',
+    description: 'Creates a new message for the invitation that will be sent to recipients',
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'Message created successfully',
+    type: InvitationMessageResponse,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad request - Invalid message data',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized - Invalid or expired token',
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden - Token does not have create_message permission',
+  })
+  async createMessage(
+    @Body() createMessageDto: CreateInvitationMessageDto,
+    @MobileAuth() mobileAuth: MobileTokenPayload,
+  ): Promise<InvitationMessageResponse> {
+    const message = await this.invitationMessageService.createMessage(
+      mobileAuth.invitationId,
+      createMessageDto,
+    );
+
+    return new InvitationMessageResponse(message);
+  }
+
+  @Patch('message/:id')
+  @RequireMobilePermission('update_message')
+  @ApiOperation({
+    summary: 'Update invitation message',
+    description: 'Updates an existing message for the invitation',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Message updated successfully',
+    type: InvitationMessageResponse,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad request - Invalid message data',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized - Invalid or expired token',
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden - Token does not have update_message permission',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Message not found',
+  })
+  async updateMessage(
+    @Param('id', ParseIntPipe) messageId: number,
+    @Body() updateMessageDto: UpdateInvitationMessageDto,
+    @MobileAuth() mobileAuth: MobileTokenPayload,
+  ): Promise<InvitationMessageResponse> {
+    const message = await this.invitationMessageService.updateMessage(
+      messageId,
+      mobileAuth.invitationId,
+      updateMessageDto.content,
+    );
+
+    return new InvitationMessageResponse(message);
+  }
+
+  @Delete('message/:id')
+  @RequireMobilePermission('delete_message')
+  @ApiOperation({
+    summary: 'Delete invitation message',
+    description: 'Deletes an existing message from the invitation',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Message deleted successfully',
+    type: BaseMessageResponse,
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized - Invalid or expired token',
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden - Token does not have delete_message permission',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Message not found',
+  })
+  async deleteMessage(
+    @Param('id', ParseIntPipe) messageId: number,
+    @MobileAuth() mobileAuth: MobileTokenPayload,
+  ): Promise<BaseMessageResponse> {
+    await this.invitationMessageService.deleteMessage(messageId, mobileAuth.invitationId);
+    return new BaseMessageResponse('Message deleted successfully');
+  }
 }
