@@ -321,6 +321,15 @@ export class InvitationMobileController {
     @Body() createMessageDto: CreateInvitationMessageDto,
     @MobileAuth() mobileAuth: MobileTokenPayload,
   ): Promise<InvitationMessageResponse> {
+    // Validate invitation exists
+    const invitation = await this.invitationService.getInvitationById({
+      id: mobileAuth.invitationId,
+    });
+
+    if (!invitation) {
+      throw new NotFoundException('Invitation not found');
+    }
+
     const message = await this.invitationMessageService.createMessage(
       mobileAuth.invitationId,
       createMessageDto,

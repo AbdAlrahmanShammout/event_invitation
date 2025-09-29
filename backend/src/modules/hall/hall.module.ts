@@ -16,6 +16,6 @@ import { UserModule } from '@/modules/user/user.module';
       useClass: HallPrismaReposiory,
     },
   ],
-  exports: [HallService, HallRepository],
+  exports: [HallService],
 })
 export class HallModule {}

@@ -3,13 +3,13 @@ import { Injectable, BadRequestException, NotFoundException } from '@nestjs/comm
 import { MobileRecipientDto } from '@/modules/invitation/dto/request/add-recipients-request.dto';
 import { InvitationRecipientRepository } from '@/modules/invitation-recipient/repository/invitation-recipient.repository';
 import { InvitationRecipientEntity } from '@/modules/invitation-recipient/entity/invitation-recipient.entity';
-import { InvitationMessageRepository } from '@/modules/invitation-message/repository/invitation-message.repository';
+import { InvitationMessageService } from '@/modules/invitation-message/invitation-message.service';
 
 @Injectable()
 export class InvitationRecipientService {
   constructor(
     private readonly invitationRecipientRepository: InvitationRecipientRepository,
-    private readonly invitationMessageRepository: InvitationMessageRepository,
+    private readonly invitationMessageService: InvitationMessageService,
   ) {}
 
   async addRecipients(input: {
@@ -107,7 +107,7 @@ export class InvitationRecipientService {
     invitationId: number;
   }): Promise<void> {
     // Validate that the message exists and belongs to the invitation
-    const message = await this.invitationMessageRepository.findById(input.messageId);
+    const message = await this.invitationMessageService.getMessageById(input.messageId);
     if (!message) {
       throw new NotFoundException('Message not found');
     }

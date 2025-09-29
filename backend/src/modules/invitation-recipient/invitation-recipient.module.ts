@@ -9,7 +9,7 @@ import { InvitationModule } from '@/modules/invitation/invitation.module';
 import { InvitationMessageModule } from '@/modules/invitation-message/invitation-message.module';
 
 @Module({
-  imports: [DatabaseProviderModule, InvitationModule, InvitationMessageModule],
+  imports: [DatabaseProviderModule, InvitationMessageModule],
   controllers: [InvitationRecipientController],
   providers: [
     InvitationRecipientService,
@@ -18,6 +18,6 @@ import { InvitationMessageModule } from '@/modules/invitation-message/invitation
       useClass: InvitationRecipientPrismaRepository,
     },
   ],
-  exports: [InvitationRecipientService, InvitationRecipientRepository],
+  exports: [InvitationRecipientService],
 })
 export class InvitationRecipientModule {}

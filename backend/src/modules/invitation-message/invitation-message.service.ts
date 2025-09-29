@@ -2,28 +2,15 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateInvitationMessageDto } from './dto/create-invitation-message.dto';
 import { InvitationMessageRepository } from './repository/invitation-message.repository';
 import { InvitationMessageEntity } from './entity/invitation-message.entity';
-import { InvitationService } from '../invitation/invitation.service';
 
 @Injectable()
 export class InvitationMessageService {
-  constructor(
-    private readonly invitationMessageRepository: InvitationMessageRepository,
-    private readonly invitationService: InvitationService,
-  ) {}
+  constructor(private readonly invitationMessageRepository: InvitationMessageRepository) {}
 
   async createMessage(
     invitationId: number,
     createMessageDto: CreateInvitationMessageDto,
   ): Promise<InvitationMessageEntity> {
-    // Validate invitation exists
-    const invitation = await this.invitationService.getInvitationById({
-      id: invitationId,
-    });
-
-    if (!invitation) {
-      throw new NotFoundException('Invitation not found');
-    }
-
     // Create the message
     return this.invitationMessageRepository.create({
       content: createMessageDto.content,
@@ -51,6 +38,10 @@ export class InvitationMessageService {
     }
 
     return this.invitationMessageRepository.update(messageId, { content });
+  }
+
+  async getMessageById(messageId: number): Promise<InvitationMessageEntity | null> {
+    return this.invitationMessageRepository.findById(messageId);
   }
 
   async deleteMessage(messageId: number, invitationId: number): Promise<void> {

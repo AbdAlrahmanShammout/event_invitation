@@ -5,7 +5,7 @@ import { InvitationModule } from '../invitation/invitation.module';
 import { InvitationMessageRepository } from '@/modules/invitation-message/repository/invitation-message.repository';
 
 @Module({
-  imports: [InvitationModule],
+  imports: [],
   providers: [
     InvitationMessageService,
     {
