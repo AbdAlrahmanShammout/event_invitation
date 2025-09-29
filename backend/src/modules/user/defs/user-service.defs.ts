@@ -12,3 +12,8 @@ export type UpdatePasswordServiceInput = {
   id: number;
   password: string;
 };
+
+export type UpdateHallIdServiceInput = {
+  id: number;
+  hallId?: number;
+};

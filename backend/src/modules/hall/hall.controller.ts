@@ -52,6 +52,11 @@ export class HallController {
       ownerId: user.id,
     });
 
+    await this.userService.updateHallId({
+      id: user.id,
+      hallId: hall.id,
+    });
+
     return new CreateHallResponseDto(hall);
   }
 }

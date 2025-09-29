@@ -1,4 +1,4 @@
-import { CreateUserRepoInput, UpdatePasswordRepoInput } from '@/modules/user/defs/user-repository.defs';
+import { CreateUserRepoInput, UpdatePasswordRepoInput, UpdateHallIdRepoInput } from '@/modules/user/defs/user-repository.defs';
 import { UserEntity } from '@/modules/user/entity/user.entity';
 
 export abstract class UserRepository {
@@ -14,4 +14,6 @@ export abstract class UserRepository {
   abstract findByEmail(email: string): Promise<UserEntity | null>;
 
   abstract updatePassword(input: UpdatePasswordRepoInput): Promise<UserEntity>;
+
+  abstract updateHallId(input: UpdateHallIdRepoInput): Promise<UserEntity>;
 }

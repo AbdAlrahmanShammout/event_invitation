@@ -9,13 +9,13 @@ export class AuthService {
 
   async validateLoginCredentials(email: string, password: string): Promise<UserEntity | null> {
     const user = await this.userService.findByEmail(email);
-    
+
     if (!user) {
       return null;
     }
 
     const isPasswordValid = await compareHashString(password, user.passwordHash);
-    
+
     if (!isPasswordValid) {
       return null;
     }

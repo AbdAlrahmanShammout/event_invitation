@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 import { hashString } from '@/common/helpers/bcrypt.helper';
-import { CreateUserServiceInput, UpdatePasswordServiceInput } from '@/modules/user/defs/user-service.defs';
+import { CreateUserServiceInput, UpdatePasswordServiceInput, UpdateHallIdServiceInput } from '@/modules/user/defs/user-service.defs';
 import { UserEntity } from '@/modules/user/entity/user.entity';
 import { UserRepository } from '@/modules/user/repository/user.repository';
 
@@ -39,6 +39,13 @@ export class UserService {
     return this.userRepository.updatePassword({
       id: input.id,
       passwordHash,
+    });
+  }
+
+  async updateHallId(input: UpdateHallIdServiceInput): Promise<UserEntity> {
+    return this.userRepository.updateHallId({
+      id: input.id,
+      hallId: input.hallId,
     });
   }
 }

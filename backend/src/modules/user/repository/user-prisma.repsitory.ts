@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { CreateUserRepoInput, UpdatePasswordRepoInput } from '@/modules/user/defs/user-repository.defs';
+import { CreateUserRepoInput, UpdatePasswordRepoInput, UpdateHallIdRepoInput } from '@/modules/user/defs/user-repository.defs';
 import { UserMapper } from '@/modules/user/mapper/user.mapper';
 import { UserRepository } from '@/modules/user/repository/user.repository';
 import { PrismaService } from '@/providers/database/prisma/prisma-provider.service';
@@ -72,6 +72,19 @@ export class UserPrismaRepsitory implements UserRepository {
       },
       data: {
         passwordHash: input.passwordHash,
+      },
+    });
+
+    return UserMapper.toEntity(result);
+  }
+
+  async updateHallId(input: UpdateHallIdRepoInput): Promise<UserEntity> {
+    const result = await this.prismaService.user.update({
+      where: {
+        id: input.id,
+      },
+      data: {
+        hallId: input.hallId,
       },
     });
 

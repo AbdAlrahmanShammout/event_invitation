@@ -12,3 +12,8 @@ export type UpdatePasswordRepoInput = {
   id: number;
   passwordHash: string;
 };
+
+export type UpdateHallIdRepoInput = {
+  id: number;
+  hallId?: number;
+};

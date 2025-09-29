@@ -13,6 +13,7 @@ export class UserMapper {
       email: schema.email,
       role: schema.role,
       lastLoginAt: schema.lastLoginAt,
+      passwordHash: schema.passwordHash,
       createdAt: schema.createdAt,
       updatedAt: schema.updatedAt,
     });
