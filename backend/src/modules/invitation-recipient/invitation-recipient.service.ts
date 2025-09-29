@@ -1,9 +1,5 @@
 import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 
-const { nanoid } = require('nanoid');
-
-import { MessageStatus } from '@/modules/invitation-recipient/enum/general.enum';
-
 import { MobileRecipientDto } from '@/modules/invitation/dto/request/add-recipients-request.dto';
 import { InvitationRecipientRepository } from '@/modules/invitation-recipient/repository/invitation-recipient.repository';
 import { InvitationRecipientEntity } from '@/modules/invitation-recipient/entity/invitation-recipient.entity';
