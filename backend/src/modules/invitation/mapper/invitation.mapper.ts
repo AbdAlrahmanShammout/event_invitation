@@ -1,4 +1,5 @@
 import { InvitationEntity } from '@/modules/invitation/entity/invitation.entity';
+import { InvitationStatus } from '@/modules/invitation/enum/general.enum';
 import { InvitationMessageMapper } from '@/modules/invitation-message/mapper/invitation-message.mapper';
 import { InvitationRecipientMapper } from '@/modules/invitation-recipient/mapper/invitation-recipient.mapper';
 import { UserMapper } from '@/modules/user/mapper/user.mapper';
@@ -16,6 +17,8 @@ export class InvitationMapper {
       maxGuestsAllowed: schema.maxGuestsAllowed,
       hallId: schema.hallId,
       creatorId: schema.creatorId,
+      status: schema.status as InvitationStatus,
+      startSendAt: schema.startSendAt,
       creator: schema.creator ? UserMapper.toEntity(schema.creator) : null,
       messages: schema.messages
         ? schema.messages.map((e) => InvitationMessageMapper.toEntity(e))

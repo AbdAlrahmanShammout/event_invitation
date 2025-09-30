@@ -38,6 +38,15 @@ enum MessageStatus {
   failed
 }
 
+enum InvitationStatus {
+  DRAFT
+  PENDING_APPROVAL
+  APPROVED
+  SENDING
+  COMPLETED
+  COMPLETED_WITH_ERRORS
+}
+
 
 // =======================
 // MODELS
@@ -85,15 +94,17 @@ model Hall {
 }
 
 model Invitation {
-  id              Int         @id @default(autoincrement())
+  id              Int               @id @default(autoincrement())
   title           String
   description     String?
-  eventDate       DateTime    @map("event_date")
-  maxGuestsAllowed Int        @map("max_guests_allowed")
-  hallId          Int         @map("hall_id")
-  creatorId       Int         @map("creator_id")
-  createdAt       DateTime    @default(now()) @map("created_at")
-  updatedAt       DateTime    @updatedAt @map("updated_at")
+  eventDate       DateTime          @map("event_date")
+  maxGuestsAllowed Int              @map("max_guests_allowed")
+  hallId          Int               @map("hall_id")
+  creatorId       Int               @map("creator_id")
+  status          InvitationStatus  @default(DRAFT)
+  startSendAt     DateTime?         @map("start_send_at")
+  createdAt       DateTime          @default(now()) @map("created_at")
+  updatedAt       DateTime          @updatedAt @map("updated_at")
 
   // Relations
   hall        Hall        @relation(fields: [hallId], references: [id])

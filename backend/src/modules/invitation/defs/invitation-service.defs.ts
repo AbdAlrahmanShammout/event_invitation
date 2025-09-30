@@ -12,8 +12,11 @@ export type UpdateInvitationServiceInput = {
   title?: string;
   description?: string;
   eventDate?: Date;
+  startSendAt?: Date;
   userHallId?: number;
 };
+
+import { InvitationStatus } from '@/modules/invitation/enum/general.enum';
 
 export type GetInvitationServiceInput = {
   id: number;
@@ -26,6 +29,9 @@ export type GetInvitationServiceInput = {
 export type GetInvitationsServiceInput = {
   hallId: number;
   creatorId?: number;
+  status?: InvitationStatus;
+  eventDateFrom?: Date;
+  eventDateTo?: Date;
   includeCreator?: boolean;
   includeMessages?: boolean;
   includeRecipients?: boolean;

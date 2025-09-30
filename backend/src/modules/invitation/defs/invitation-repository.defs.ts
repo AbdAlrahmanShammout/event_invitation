@@ -1,3 +1,5 @@
+import { InvitationStatus } from '@/modules/invitation/enum/general.enum';
+
 export type CreateInvitationRepoInput = {
   title: string;
   description?: string;
@@ -13,6 +15,8 @@ export type UpdateInvitationRepoInput = {
   description?: string;
   eventDate?: Date;
   maxGuestsAllowed?: number;
+  startSendAt?: Date;
+  status?: InvitationStatus;
 };
 
 export type GetInvitationRepoInput = {
@@ -25,6 +29,9 @@ export type GetInvitationRepoInput = {
 export type GetInvitationsRepoInput = {
   hallId: number;
   creatorId?: number;
+  status?: InvitationStatus;
+  eventDateFrom?: Date;
+  eventDateTo?: Date;
   includeCreator?: boolean;
   includeMessages?: boolean;
   includeRecipients?: boolean;

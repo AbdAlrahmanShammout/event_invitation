@@ -1,6 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
-import { IsBoolean, IsNumber, IsOptional, Min } from 'class-validator';
+import { IsBoolean, IsDateString, IsEnum, IsNumber, IsOptional, Min } from 'class-validator';
+
+import { InvitationStatus } from '@/modules/invitation/enum/general.enum';
 
 export class GetInvitationsRequestDto {
   @ApiProperty({
@@ -69,4 +71,38 @@ export class GetInvitationsRequestDto {
   @Min(0)
   @Transform(({ value }) => parseInt(value))
   offset?: number;
+
+  @ApiProperty({
+    description: 'Filter by invitation status',
+    enum: InvitationStatus,
+    example: InvitationStatus.DRAFT,
+    required: false,
+  })
+  @IsOptional()
+  @IsEnum(InvitationStatus)
+  status?: InvitationStatus;
+
+  @ApiProperty({
+    description: 'Filter by event date (from this date onwards)',
+    example: '2024-12-25T00:00:00.000Z',
+    type: 'string',
+    format: 'date-time',
+    required: false,
+  })
+  @IsOptional()
+  @IsDateString()
+  @Transform(({ value }) => (value ? new Date(value) : undefined))
+  eventDateFrom?: Date;
+
+  @ApiProperty({
+    description: 'Filter by event date (up to this date)',
+    example: '2024-12-31T23:59:59.000Z',
+    type: 'string',
+    format: 'date-time',
+    required: false,
+  })
+  @IsOptional()
+  @IsDateString()
+  @Transform(({ value }) => (value ? new Date(value) : undefined))
+  eventDateTo?: Date;
 }

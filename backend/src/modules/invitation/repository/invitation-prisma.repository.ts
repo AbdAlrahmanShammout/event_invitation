@@ -56,6 +56,23 @@ export class InvitationPrismaRepository implements InvitationRepository {
       where.creatorId = input.creatorId;
     }
 
+    if (input.status) {
+      where.status = input.status;
+    }
+
+    // Date range filtering
+    if (input.eventDateFrom || input.eventDateTo) {
+      where.eventDate = {};
+
+      if (input.eventDateFrom) {
+        where.eventDate.gte = input.eventDateFrom;
+      }
+
+      if (input.eventDateTo) {
+        where.eventDate.lte = input.eventDateTo;
+      }
+    }
+
     const results = await this.prismaService.invitation.findMany({
       where,
       include: {
@@ -66,7 +83,7 @@ export class InvitationPrismaRepository implements InvitationRepository {
       take: input.limit,
       skip: input.offset,
       orderBy: {
-        createdAt: 'desc',
+        eventDate: 'asc', // Order by event date ascending for better UX
       },
     });
 
@@ -90,6 +107,14 @@ export class InvitationPrismaRepository implements InvitationRepository {
 
     if (input.maxGuestsAllowed !== undefined) {
       updateData.maxGuestsAllowed = input.maxGuestsAllowed;
+    }
+
+    if (input.status !== undefined) {
+      updateData.status = input.status;
+    }
+
+    if (input.startSendAt !== undefined) {
+      updateData.startSendAt = input.startSendAt;
     }
 
     const result = await this.prismaService.invitation.update({

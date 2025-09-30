@@ -32,4 +32,16 @@ export class UpdateInvitationRequestDto {
   @IsDateString()
   @Transform(({ value }) => new Date(value))
   eventDate?: Date;
+
+  @ApiProperty({
+    description: 'Start sending date/time for all messages',
+    example: '2024-12-24T10:00:00.000Z',
+    type: 'string',
+    format: 'date-time',
+    required: false,
+  })
+  @IsOptional()
+  @IsDateString()
+  @Transform(({ value }) => (value ? new Date(value) : undefined))
+  startSendAt?: Date;
 }

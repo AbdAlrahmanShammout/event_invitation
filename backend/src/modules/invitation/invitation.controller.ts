@@ -26,6 +26,7 @@ import { CreateInvitationRequestDto } from '@/modules/invitation/dto/request/cre
 import { GetInvitationRequestDto } from '@/modules/invitation/dto/request/get-invitation-request.dto';
 import { GetInvitationsRequestDto } from '@/modules/invitation/dto/request/get-invitations-request.dto';
 import { UpdateInvitationRequestDto } from '@/modules/invitation/dto/request/update-invitation-request.dto';
+import { BaseMessageResponse } from '@/common/base/base-message.response';
 import { CreateInvitationResponseDto } from '@/modules/invitation/dto/response/create-invitation-response.dto';
 import { GetInvitationResponseDto } from '@/modules/invitation/dto/response/get-invitation-response.dto';
 import { GetInvitationsResponseDto } from '@/modules/invitation/dto/response/get-invitations-response.dto';
@@ -133,7 +134,34 @@ export class InvitationController {
   @ApiOperation({
     summary: 'Get all invitations',
     description:
-      "Retrieves a list of invitations for the authenticated user's hall with optional filtering",
+      "Retrieves a list of invitations for the authenticated user's hall with optional filtering by status and event date",
+  })
+  @ApiQuery({
+    name: 'status',
+    description: 'Filter by invitation status',
+    enum: [
+      'DRAFT',
+      'PENDING_APPROVAL',
+      'APPROVED',
+      'SENDING',
+      'COMPLETED',
+      'COMPLETED_WITH_ERRORS',
+    ],
+    required: false,
+  })
+  @ApiQuery({
+    name: 'eventDateFrom',
+    description: 'Filter events from this date onwards (ISO format)',
+    type: 'string',
+    format: 'date-time',
+    required: false,
+  })
+  @ApiQuery({
+    name: 'eventDateTo',
+    description: 'Filter events up to this date (ISO format)',
+    type: 'string',
+    format: 'date-time',
+    required: false,
   })
   @ApiResponse({
     status: 200,
@@ -159,6 +187,9 @@ export class InvitationController {
     const invitations = await this.invitationService.getInvitations({
       hallId: currentUser.hallId, // Always filter by user's hall
       creatorId: query.creatorId,
+      status: query.status,
+      eventDateFrom: query.eventDateFrom,
+      eventDateTo: query.eventDateTo,
       includeCreator: query.includeCreator,
       includeMessages: query.includeMessages,
       includeRecipients: query.includeRecipients,
@@ -212,10 +243,59 @@ export class InvitationController {
       title: updateInvitationDto.title,
       description: updateInvitationDto.description,
       eventDate: updateInvitationDto.eventDate,
+      startSendAt: updateInvitationDto.startSendAt,
       userHallId: currentUser.hallId,
     });
 
     return new UpdateInvitationResponseDto(invitation);
+  }
+
+  @Post(':id/approve')
+  @ApiOperation({
+    summary: 'Approve invitation',
+    description: 'Approves an invitation, changing its status from PENDING_APPROVAL to APPROVED',
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'Invitation ID',
+    type: 'number',
+    example: 1,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Invitation approved successfully',
+    type: BaseMessageResponse,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad request - Invitation cannot be approved (wrong status)',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized - Authentication required',
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden - User must be associated with a hall',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Invitation not found',
+  })
+  async approveInvitation(
+    @Param('id', ParseIntPipe) id: number,
+    @LoggedInUser() currentUser: UserEntity,
+  ): Promise<BaseMessageResponse> {
+    if (!currentUser.hallId) {
+      throw new ForbiddenException('User must be associated with a hall to approve invitations');
+    }
+
+    await this.invitationService.approveInvitation({
+      id,
+      userHallId: currentUser.hallId,
+    });
+
+    return new BaseMessageResponse('Invitation approved successfully');
   }
 
   @Delete(':id')

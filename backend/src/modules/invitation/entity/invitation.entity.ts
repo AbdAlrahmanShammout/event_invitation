@@ -1,5 +1,6 @@
 import { BaseEntity } from '@/common/base/base.entity';
 import { HallZodType } from '@/modules/hall/zod/hall.zod';
+import { InvitationStatus } from '@/modules/invitation/enum/general.enum';
 import { InvitationZodType } from '@/modules/invitation/zod/invitation.zod';
 import { InvitationMessageEntity } from '@/modules/invitation-message/entity/invitation-message.entity';
 import { InvitationRecipientEntity } from '@/modules/invitation-recipient/entity/invitation-recipient.entity';
@@ -13,6 +14,8 @@ export class InvitationEntity extends BaseEntity {
   maxGuestsAllowed: number;
   hallId: number;
   creatorId: number;
+  status: InvitationStatus;
+  startSendAt?: Date;
 
   submissionDeadline: Date;
 

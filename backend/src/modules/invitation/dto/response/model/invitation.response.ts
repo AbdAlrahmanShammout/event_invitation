@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 
 import { BaseModelResponseDto } from '@/common/base/base-model.response';
 import { InvitationEntity } from '@/modules/invitation/entity/invitation.entity';
+import { InvitationStatus } from '@/modules/invitation/enum/general.enum';
 import { InvitationMessageResponse } from '@/modules/invitation-message/dto/response/model/invitation-message.response';
 import { InvitationRecipientResponse } from '@/modules/invitation-recipient/dto/response/model/invitation-recipient.response';
 import { UserResponse } from '@/modules/user/dto/response/model/user.response';
@@ -47,6 +48,22 @@ export class InvitationResponse extends BaseModelResponseDto {
   creatorId: number;
 
   @ApiProperty({
+    description: 'Current status of the invitation',
+    enum: InvitationStatus,
+    example: InvitationStatus.DRAFT,
+  })
+  status: InvitationStatus;
+
+  @ApiProperty({
+    description: 'Start sending messages at this date and time',
+    example: '2024-12-24T10:00:00.000Z',
+    type: 'string',
+    format: 'date-time',
+    required: false,
+  })
+  startSendAt?: Date;
+
+  @ApiProperty({
     description: 'Submission deadline',
     example: '2024-12-20T23:59:59.000Z',
     type: 'string',
@@ -84,6 +101,8 @@ export class InvitationResponse extends BaseModelResponseDto {
     this.submissionDeadline = data.submissionDeadline;
     this.hallId = data.hallId;
     this.creatorId = data.creatorId;
+    this.status = data.status;
+    this.startSendAt = data.startSendAt;
 
     this.creator = data.creator ? new UserResponse(data.creator) : undefined;
     this.messages = data.messages

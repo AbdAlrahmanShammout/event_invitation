@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 
 import {
   CreateInvitationServiceInput,
@@ -7,6 +7,7 @@ import {
   UpdateInvitationServiceInput,
 } from '@/modules/invitation/defs/invitation-service.defs';
 import { InvitationEntity } from '@/modules/invitation/entity/invitation.entity';
+import { InvitationStatus } from '@/modules/invitation/enum/general.enum';
 import { InvitationRepository } from '@/modules/invitation/repository/invitation.repository';
 import { HallService } from '@/modules/hall/hall.service';
 import { InvitationRecipientService } from '@/modules/invitation-recipient/invitation-recipient.service';
@@ -55,6 +56,9 @@ export class InvitationService {
     return await this.invitationRepository.getAll({
       hallId: input.hallId,
       creatorId: input.creatorId,
+      status: input.status,
+      eventDateFrom: input.eventDateFrom,
+      eventDateTo: input.eventDateTo,
       includeCreator: input.includeCreator,
       includeMessages: input.includeMessages,
       includeRecipients: input.includeRecipients,
@@ -75,7 +79,86 @@ export class InvitationService {
       title: input.title,
       description: input.description,
       eventDate: input.eventDate,
+      startSendAt: input.startSendAt,
     });
+  }
+
+  async approveInvitation(input: { id: number; userHallId: number }): Promise<InvitationEntity> {
+    // First check if invitation exists and belongs to user's hall
+    const invitation = await this.getInvitationById({
+      id: input.id,
+      userHallId: input.userHallId,
+    });
+
+    // Validate that the invitation can be approved
+    if (invitation.status !== InvitationStatus.PENDING_APPROVAL) {
+      throw new BadRequestException(
+        `Invitation cannot be approved. Current status: ${invitation.status}. Expected status: ${InvitationStatus.PENDING_APPROVAL}`,
+      );
+    }
+
+    // Update the invitation status to APPROVED
+    const updatedInvitation = await this.invitationRepository.update({
+      id: input.id,
+      status: InvitationStatus.APPROVED,
+    });
+
+    return updatedInvitation;
+  }
+
+  async submitForApproval(input: { id: number; userHallId?: number }): Promise<InvitationEntity> {
+    // First check if invitation exists
+    const invitation = await this.getInvitationById({
+      id: input.id,
+      userHallId: input.userHallId,
+    });
+
+    // Validate that the invitation can be submitted for approval
+    if (invitation.status !== InvitationStatus.DRAFT) {
+      throw new BadRequestException(
+        `Invitation cannot be submitted for approval. Current status: ${invitation.status}. Expected status: ${InvitationStatus.DRAFT}`,
+      );
+    }
+
+    // Check if startSendAt is set
+    if (!invitation.startSendAt) {
+      throw new BadRequestException(
+        'Cannot submit invitation for approval: Start send date/time (startSendAt) must be set',
+      );
+    }
+
+    // Get all recipients for this invitation
+    const recipients = await this.invitationRecipientService.findRecipientsByInvitation(input.id);
+
+    // Check if we have any recipients
+    if (recipients.length === 0) {
+      throw new BadRequestException('Cannot submit invitation for approval: No recipients added');
+    }
+
+    // Check if recipient count is within the allowed limit
+    if (recipients.length > invitation.maxGuestsAllowed) {
+      throw new BadRequestException(
+        `Cannot submit invitation for approval: Number of recipients (${recipients.length}) exceeds maximum allowed (${invitation.maxGuestsAllowed})`,
+      );
+    }
+
+    // Check if all recipients have required fields
+    const recipientsWithoutMessage = recipients.filter(
+      (recipient) => !recipient.invitationMessageId,
+    );
+    if (recipientsWithoutMessage.length > 0) {
+      throw new BadRequestException(
+        `Cannot submit invitation for approval: ${recipientsWithoutMessage.length} recipients do not have a message assigned`,
+      );
+    }
+
+    // All validations passed, update status to PENDING_APPROVAL
+    const updatedInvitation = await this.invitationRepository.update({
+      id: input.id,
+      status: InvitationStatus.PENDING_APPROVAL,
+    });
+
+    return updatedInvitation;
   }
 
   async deleteInvitation(id: number, userHallId?: number): Promise<void> {

@@ -451,4 +451,41 @@ export class InvitationMobileController {
       `Successfully linked ${linkDto.recipientIds.length} recipients to message`,
     );
   }
+
+  @Post('submit-for-approval')
+  @RequireMobilePermission('submit_for_approval')
+  @ApiOperation({
+    summary: 'Submit invitation for approval',
+    description: 'Submits the invitation for hall admin approval. Validates that all recipients have messages and send dates assigned, and that the recipient count is within the allowed limit.',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Invitation submitted for approval successfully',
+    type: BaseMessageResponse,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad request - Validation failed (missing recipients, messages, send dates, or exceeds limit)',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized - Invalid or expired token',
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden - Missing required permission or invitation already submitted',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Invitation not found',
+  })
+  async submitForApproval(
+    @MobileAuth() mobileAuth: MobileTokenPayload,
+  ): Promise<BaseMessageResponse> {
+    await this.invitationService.submitForApproval({
+      id: mobileAuth.invitationId,
+    });
+
+    return new BaseMessageResponse('Invitation submitted for approval successfully');
+  }
 }
