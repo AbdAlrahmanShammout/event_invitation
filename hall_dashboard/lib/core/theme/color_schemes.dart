@@ -1,0 +1,71 @@
+import 'package:flutter/material.dart';
+
+/// Light color scheme for the application.
+/// Defines all semantic colors used throughout the app in light mode.
+/// These colors follow Material Design 3 guidelines.
+const lightColorScheme = ColorScheme(
+  brightness: Brightness.light,
+  primary: Color(0xFF2B9162),
+  onPrimary: Color(0xFFF6F6F6),
+  primaryContainer: Color(0xFF44D0C0),
+  onPrimaryContainer: Color(0xFF110068),
+  secondary: Color(0xFF203AD0),
+  onSecondary: Color(0xFFFFFFFF),
+  secondaryContainer: Color(0xFF6070CE),
+  onSecondaryContainer: Color(0xFF002113),
+  tertiary: Color(0xFF5654A8),
+  onTertiary: Color(0xFFFFFFFF),
+  tertiaryContainer: Color(0xFFE2DFFF),
+  onTertiaryContainer: Color(0xFF100563),
+  error: Color(0xFF9C413E),
+  onError: Color(0xFFFFFFFF),
+  errorContainer: Color(0xFFFFDAD7),
+  onErrorContainer: Color(0xFF410004),
+  outline: Color(0xFF72777F),
+  surface: Color(0xFFEEEEEE),
+  onSurface: Color(0xFF1A1C1E),
+  surfaceContainerHighest: Color(0xFFDEE3EB),
+  onSurfaceVariant: Color(0xFF42474E),
+  inverseSurface: Color(0xFF2F3133),
+  onInverseSurface: Color(0xFFF0F0F4),
+  inversePrimary: Color(0xFFC4C0FF),
+  shadow: Color(0xFF000000),
+  surfaceTint: Color(0xFF5650BA),
+  outlineVariant: Color(0xFFC2C7CF),
+  scrim: Color(0xFF000000),
+);
+
+/// Dark color scheme for the application.
+/// Defines all semantic colors used throughout the app in dark mode.
+/// These colors follow Material Design 3 guidelines and provide good contrast.
+const darkColorScheme = ColorScheme(
+  brightness: Brightness.dark,
+  primary: Color(0xFFC4C0FF),
+  onPrimary: Color(0xFF261A8A),
+  primaryContainer: Color(0xFF3E36A0),
+  onPrimaryContainer: Color(0xFFE3DFFF),
+  secondary: Color(0xFF70DBA8),
+  onSecondary: Color(0xFF003824),
+  secondaryContainer: Color(0xFF005236),
+  onSecondaryContainer: Color(0xFF8CF7C2),
+  tertiary: Color(0xFFC3C0FF),
+  onTertiary: Color(0xFF272377),
+  tertiaryContainer: Color(0xFF3E3C8F),
+  onTertiaryContainer: Color(0xFFE2DFFF),
+  error: Color(0xFFFFB3AE),
+  onError: Color(0xFF5F1414),
+  errorContainer: Color(0xFF7E2A28),
+  onErrorContainer: Color(0xFFFFDAD7),
+  outline: Color(0xFF8C9199),
+  surface: Color(0xFF111416),
+  onSurface: Color(0xFFC6C6C9),
+  surfaceContainerHighest: Color(0xFF42474E),
+  onSurfaceVariant: Color(0xFFC2C7CF),
+  inverseSurface: Color(0xFFE2E2E5),
+  onInverseSurface: Color(0xFF1A1C1E),
+  inversePrimary: Color(0xFF5650BA),
+  shadow: Color(0xFF000000),
+  surfaceTint: Color(0xFFC4C0FF),
+  outlineVariant: Color(0xFF42474E),
+  scrim: Color(0xFF000000),
+);
