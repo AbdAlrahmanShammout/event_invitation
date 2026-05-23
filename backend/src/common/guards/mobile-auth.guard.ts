@@ -2,8 +2,8 @@ import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from
 import { Reflector } from '@nestjs/core';
 import { Request } from 'express';
 
-import { MobileTokenService } from '@/modules/mobile/services/mobile-token.service';
-import { MobileTokenPayload } from '@/modules/mobile/types/mobile-token-payload.type';
+import { MobileTokenService } from '@/modules/invitation/mobile-token.service';
+import { MobileTokenPayload } from '@/modules/invitation/types/mobile-token-payload.type';
 
 export const MOBILE_PERMISSION_KEY = 'mobile_permission';
 
