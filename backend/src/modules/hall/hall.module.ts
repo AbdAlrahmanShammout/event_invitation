@@ -5,9 +5,10 @@ import { HallService } from '@/modules/hall/hall.service';
 import { HallRepository } from '@/modules/hall/repository/hall.repository';
 import { HallPrismaReposiory } from '@/modules/hall/repository/hall-prisma.reposiory';
 import { UserModule } from '@/modules/user/user.module';
+import { WhatsappSessionModule } from '@/modules/whatsapp-session/whatsapp-session.module';
 
 @Module({
-  imports: [UserModule],
+  imports: [UserModule, WhatsappSessionModule],
   controllers: [HallController],
   providers: [
     HallService,

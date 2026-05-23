@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 import { HallMapper } from '@/modules/hall/mapper/hall.mapper';
 import { HallRepository } from '@/modules/hall/repository/hall.repository';
+import { hallDetailsInclude } from '@/modules/hall/types/hall-details.include';
 import { PrismaService } from '@/providers/database/prisma/prisma-provider.service';
 
 import { CreateHallRepoInput } from '../defs/hall-repository.defs';
@@ -31,6 +32,7 @@ export class HallPrismaReposiory implements HallRepository {
       where: {
         id,
       },
+      include: hallDetailsInclude,
     });
 
     if (!result) {

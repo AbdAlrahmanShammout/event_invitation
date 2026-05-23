@@ -1,13 +1,14 @@
 import { Injectable } from '@nestjs/common';
 
-import { InvitationMessageEntity } from '@/modules/invitation-message/entity/invitation-message.entity';
-import { InvitationMessageMapper } from '@/modules/invitation-message/mapper/invitation-message.mapper';
-import { InvitationMessageRepository } from '@/modules/invitation-message/repository/invitation-message.repository';
-import { PrismaService } from '@/providers/database/prisma/prisma-provider.service';
-import { 
+import {
   CreateInvitationMessageRepoInput,
   UpdateInvitationMessageRepoInput,
 } from '@/modules/invitation-message/defs/invitation-message-repository.defs';
+import { InvitationMessageEntity } from '@/modules/invitation-message/entity/invitation-message.entity';
+import { InvitationMessageMapper } from '@/modules/invitation-message/mapper/invitation-message.mapper';
+import { InvitationMessageRepository } from '@/modules/invitation-message/repository/invitation-message.repository';
+import { invitationMessageDetailsInclude } from '@/modules/invitation-message/types/invitation-message-details.include';
+import { PrismaService } from '@/providers/database/prisma/prisma-provider.service';
 
 @Injectable()
 export class InvitationMessagePrismaRepository implements InvitationMessageRepository {
@@ -27,6 +28,7 @@ export class InvitationMessagePrismaRepository implements InvitationMessageRepos
   async findByInvitationId(invitationId: number): Promise<InvitationMessageEntity[]> {
     const messages = await this.prismaService.invitationMessage.findMany({
       where: { invitationId },
+      include: invitationMessageDetailsInclude,
       orderBy: { createdAt: 'desc' },
     });
 
@@ -44,6 +46,7 @@ export class InvitationMessagePrismaRepository implements InvitationMessageRepos
   async findById(id: number): Promise<InvitationMessageEntity | null> {
     const message = await this.prismaService.invitationMessage.findUnique({
       where: { id },
+      include: invitationMessageDetailsInclude,
     });
 
     return message ? InvitationMessageMapper.toEntity(message) : null;

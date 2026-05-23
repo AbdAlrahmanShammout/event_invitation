@@ -1,10 +1,10 @@
 import { HallEntity } from '@/modules/hall/entity/hall.entity';
+import { HallDetailsSchema } from '@/modules/hall/types/hall-details-schema.type';
 import { InvitationMapper } from '@/modules/invitation/mapper/invitation.mapper';
 import { UserMapper } from '@/modules/user/mapper/user.mapper';
-import { HallFullType } from '@/providers/database/prisma/schema-prisma.type';
 
 export class HallMapper {
-  static toEntity(schema: HallFullType): HallEntity {
+  static toEntity(schema: HallDetailsSchema): HallEntity {
     return new HallEntity({
       id: schema.id,
       createdAt: schema.createdAt,

@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 
 import {
   CreateInvitationRepoInput,
@@ -9,7 +10,14 @@ import {
 import { InvitationEntity } from '@/modules/invitation/entity/invitation.entity';
 import { InvitationMapper } from '@/modules/invitation/mapper/invitation.mapper';
 import { InvitationRepository } from '@/modules/invitation/repository/invitation.repository';
+import { invitationMessageDetailsInclude } from '@/modules/invitation-message/types/invitation-message-details.include';
+import { invitationRecipientDetailsInclude } from '@/modules/invitation-recipient/types/invitation-recipient-details.include';
 import { PrismaService } from '@/providers/database/prisma/prisma-provider.service';
+
+type InvitationRelationIncludeInput = Pick<
+  GetInvitationRepoInput,
+  'includeCreator' | 'includeMessages' | 'includeRecipients'
+>;
 
 @Injectable()
 export class InvitationPrismaRepository implements InvitationRepository {
@@ -33,11 +41,7 @@ export class InvitationPrismaRepository implements InvitationRepository {
   async getById(input: GetInvitationRepoInput): Promise<InvitationEntity | null> {
     const result = await this.prismaService.invitation.findUnique({
       where: { id: input.id },
-      include: {
-        creator: input.includeCreator,
-        messages: input.includeMessages,
-        recipients: input.includeRecipients,
-      },
+      include: this.buildInvitationInclude(input),
     });
 
     if (!result) {
@@ -48,7 +52,7 @@ export class InvitationPrismaRepository implements InvitationRepository {
   }
 
   async getAll(input: GetInvitationsRepoInput): Promise<InvitationEntity[]> {
-    const where: any = {
+    const where: Prisma.InvitationWhereInput = {
       hallId: input.hallId, // Always required - filter by hall
     };
 
@@ -75,11 +79,7 @@ export class InvitationPrismaRepository implements InvitationRepository {
 
     const results = await this.prismaService.invitation.findMany({
       where,
-      include: {
-        creator: input.includeCreator,
-        messages: input.includeMessages,
-        recipients: input.includeRecipients,
-      },
+      include: this.buildInvitationInclude(input),
       take: input.limit,
       skip: input.offset,
       orderBy: {
@@ -91,7 +91,7 @@ export class InvitationPrismaRepository implements InvitationRepository {
   }
 
   async update(input: UpdateInvitationRepoInput): Promise<InvitationEntity> {
-    const updateData: any = {};
+    const updateData: Prisma.InvitationUncheckedUpdateInput = {};
 
     if (input.title !== undefined) {
       updateData.title = input.title;
@@ -129,5 +129,23 @@ export class InvitationPrismaRepository implements InvitationRepository {
     await this.prismaService.invitation.delete({
       where: { id },
     });
+  }
+
+  private buildInvitationInclude(input: InvitationRelationIncludeInput): Prisma.InvitationInclude | undefined {
+    const include: Prisma.InvitationInclude = {};
+    if (input.includeCreator) {
+      include.creator = true;
+    }
+    if (input.includeMessages) {
+      include.messages = {
+        include: invitationMessageDetailsInclude,
+      };
+    }
+    if (input.includeRecipients) {
+      include.recipients = {
+        include: invitationRecipientDetailsInclude,
+      };
+    }
+    return Object.keys(include).length > 0 ? include : undefined;
   }
 }
