@@ -22,6 +22,7 @@ import {
 } from '@nestjs/swagger';
 
 import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
+import { HallOperationGuard } from '@/common/guards/hall-operation.guard';
 import { CreateInvitationRequestDto } from '@/modules/invitation/dto/request/create-invitation-request.dto';
 import { GetInvitationRequestDto } from '@/modules/invitation/dto/request/get-invitation-request.dto';
 import { GetInvitationsRequestDto } from '@/modules/invitation/dto/request/get-invitations-request.dto';
@@ -34,13 +35,19 @@ import { UpdateInvitationResponseDto } from '@/modules/invitation/dto/response/u
 import { InvitationService } from '@/modules/invitation/invitation.service';
 import { LoggedInUser } from '@/common/decorators/requests/logged-in-user.decorator';
 import { UserEntity } from '@/modules/user/entity/user.entity';
+import { InvitationRecipientService } from '@/modules/invitation-recipient/invitation-recipient.service';
+import { InvitationRecipientResponse } from '@/modules/invitation-recipient/dto/response/model/invitation-recipient.response';
+import { DeliverySummary } from '@/modules/invitation-recipient/repository/invitation-recipient.repository';
 
 @ApiTags('invitations')
 @Controller('invitation')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, HallOperationGuard)
 @ApiBearerAuth()
 export class InvitationController {
-  constructor(private readonly invitationService: InvitationService) {}
+  constructor(
+    private readonly invitationService: InvitationService,
+    private readonly invitationRecipientService: InvitationRecipientService,
+  ) {}
 
   @Post()
   @ApiOperation({
@@ -398,5 +405,78 @@ export class InvitationController {
       expiresAt: qrResult.expiresAt,
       message: 'QR code generated successfully',
     };
+  }
+
+  @Post(':id/reject')
+  @ApiOperation({
+    summary: 'Reject invitation',
+    description: 'Rejects a pending approval invitation, returning it to DRAFT status.',
+  })
+  @ApiParam({ name: 'id', type: 'number' })
+  @ApiResponse({ status: 200, type: BaseMessageResponse })
+  async rejectInvitation(
+    @Param('id', ParseIntPipe) id: number,
+    @LoggedInUser() currentUser: UserEntity,
+  ): Promise<BaseMessageResponse> {
+    if (!currentUser.hallId) {
+      throw new ForbiddenException('User must be associated with a hall to reject invitations');
+    }
+    await this.invitationService.rejectInvitation({ id, userHallId: currentUser.hallId });
+    return new BaseMessageResponse('Invitation rejected successfully');
+  }
+
+  @Get(':id/recipients')
+  @ApiOperation({
+    summary: 'List recipients for an invitation',
+    description: 'Returns guest phone numbers, names, message statuses, and delivery times.',
+  })
+  @ApiParam({ name: 'id', type: 'number' })
+  @ApiResponse({ status: 200, type: [InvitationRecipientResponse] })
+  async getInvitationRecipients(
+    @Param('id', ParseIntPipe) id: number,
+    @LoggedInUser() currentUser: UserEntity,
+  ): Promise<InvitationRecipientResponse[]> {
+    if (!currentUser.hallId) {
+      throw new ForbiddenException('User must be associated with a hall to view recipients');
+    }
+    await this.invitationService.getInvitationById({ id, userHallId: currentUser.hallId });
+    const recipients = await this.invitationRecipientService.findRecipients({
+      invitationId: id,
+    });
+    return recipients.map((r) => new InvitationRecipientResponse(r));
+  }
+
+  @Get(':id/send-summary')
+  @ApiOperation({
+    summary: 'Get delivery counts for an invitation',
+    description: 'Returns grouped message status counts for the invitation.',
+  })
+  @ApiParam({ name: 'id', type: 'number' })
+  @ApiResponse({ status: 200 })
+  async getSendSummary(
+    @Param('id', ParseIntPipe) id: number,
+    @LoggedInUser() currentUser: UserEntity,
+  ): Promise<DeliverySummary> {
+    if (!currentUser.hallId) {
+      throw new ForbiddenException('User must be associated with a hall to view summary');
+    }
+    await this.invitationService.getInvitationById({ id, userHallId: currentUser.hallId });
+    return this.invitationRecipientService.getDeliverySummary(id);
+  }
+
+  @Get('monitoring/today')
+  @ApiOperation({
+    summary: "Today's outgoing messages",
+    description: "Returns all recipients scheduled to be sent today for the hall's invitations.",
+  })
+  @ApiResponse({ status: 200, type: [InvitationRecipientResponse] })
+  async getTodayMonitoring(
+    @LoggedInUser() currentUser: UserEntity,
+  ): Promise<InvitationRecipientResponse[]> {
+    if (!currentUser.hallId) {
+      throw new ForbiddenException('User must be associated with a hall to view monitoring');
+    }
+    const recipients = await this.invitationRecipientService.getTodayRecipients(currentUser.hallId);
+    return recipients.map((r) => new InvitationRecipientResponse(r));
   }
 }

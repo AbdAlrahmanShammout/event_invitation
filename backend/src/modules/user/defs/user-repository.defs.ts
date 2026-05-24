@@ -17,3 +17,10 @@ export type UpdateHallIdRepoInput = {
   id: number;
   hallId?: number;
 };
+
+export type GetUsersRepoInput = {
+  hallId?: number;
+  role?: UserRole;
+  limit?: number;
+  offset?: number;
+};

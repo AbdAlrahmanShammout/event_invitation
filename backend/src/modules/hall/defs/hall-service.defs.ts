@@ -6,3 +6,14 @@ export type CreateHallServiceInput = {
   phone: string;
   ownerId: number;
 };
+
+export type CreateHallWithOwnerServiceInput = {
+  hallName: string;
+  hallDescription?: string;
+  hallAddress: string;
+  hallEmail: string;
+  hallPhone: string;
+  ownerName: string;
+  ownerEmail: string;
+  ownerPassword: string;
+};

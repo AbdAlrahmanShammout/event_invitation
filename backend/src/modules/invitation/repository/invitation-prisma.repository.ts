@@ -52,9 +52,11 @@ export class InvitationPrismaRepository implements InvitationRepository {
   }
 
   async getAll(input: GetInvitationsRepoInput): Promise<InvitationEntity[]> {
-    const where: Prisma.InvitationWhereInput = {
-      hallId: input.hallId, // Always required - filter by hall
-    };
+    const where: Prisma.InvitationWhereInput = {};
+
+    if (input.hallId) {
+      where.hallId = input.hallId;
+    }
 
     if (input.creatorId) {
       where.creatorId = input.creatorId;

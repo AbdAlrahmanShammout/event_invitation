@@ -17,3 +17,10 @@ export type UpdateHallIdServiceInput = {
   id: number;
   hallId?: number;
 };
+
+export type GetUsersServiceInput = {
+  hallId?: number;
+  role?: UserRole;
+  limit?: number;
+  offset?: number;
+};

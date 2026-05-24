@@ -1,10 +1,13 @@
 import { Injectable } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 
 import { InvitationRecipientEntity } from '@/modules/invitation-recipient/entity/invitation-recipient.entity';
 import { InvitationRecipientMapper } from '@/modules/invitation-recipient/mapper/invitation-recipient.mapper';
 import { MessageStatus } from '@/modules/invitation-recipient/enum/general.enum';
 import {
   CreateMobileRecipientsInput,
+  DeliverySummary,
+  FindRecipientsInput,
   InvitationRecipientRepository,
 } from '@/modules/invitation-recipient/repository/invitation-recipient.repository';
 import { PrismaService } from '@/providers/database/prisma/prisma-provider.service';
@@ -65,6 +68,59 @@ export class InvitationRecipientPrismaRepository implements InvitationRecipientR
         messageStatus: status,
       },
     });
+  }
+
+  async findRecipients(input: FindRecipientsInput): Promise<InvitationRecipientEntity[]> {
+    const where: Prisma.InvitationRecipientWhereInput = {};
+    if (input.invitationId) where.invitationId = input.invitationId;
+    if (input.hallId) where.invitation = { hallId: input.hallId };
+    if (input.messageStatus) where.messageStatus = input.messageStatus;
+    if (input.sentAtFrom || input.sentAtTo) {
+      where.sentAt = {};
+      if (input.sentAtFrom) where.sentAt.gte = input.sentAtFrom;
+      if (input.sentAtTo) where.sentAt.lte = input.sentAtTo;
+    }
+    if (input.sendAtFrom || input.sendAtTo) {
+      where.sendAt = {};
+      if (input.sendAtFrom) where.sendAt.gte = input.sendAtFrom;
+      if (input.sendAtTo) where.sendAt.lte = input.sendAtTo;
+    }
+    const results = await this.prismaService.invitationRecipient.findMany({
+      where,
+      take: input.limit ?? 50,
+      skip: input.offset ?? 0,
+      orderBy: { submittedAt: 'desc' },
+    });
+    return results.map((r) => InvitationRecipientMapper.toEntity(r));
+  }
+
+  async getDeliverySummary(invitationId: number): Promise<DeliverySummary> {
+    const groups = await this.prismaService.invitationRecipient.groupBy({
+      by: ['messageStatus'],
+      where: { invitationId },
+      _count: true,
+    });
+    const summary: DeliverySummary = {
+      holding: 0,
+      pending: 0,
+      sent: 0,
+      delivered: 0,
+      read: 0,
+      failed: 0,
+      total: 0,
+    };
+    for (const group of groups) {
+      const status = group.messageStatus as MessageStatus;
+      const count = group._count;
+      summary.total += count;
+      if (status === MessageStatus.HOLDING) summary.holding = count;
+      else if (status === MessageStatus.PENDING) summary.pending = count;
+      else if (status === MessageStatus.SENT) summary.sent = count;
+      else if (status === MessageStatus.DELIVERED) summary.delivered = count;
+      else if (status === MessageStatus.READ) summary.read = count;
+      else if (status === MessageStatus.FAILED) summary.failed = count;
+    }
+    return summary;
   }
 
   async findExistingPhoneNumbers(invitationId: number, phoneNumbers: string[]): Promise<string[]> {

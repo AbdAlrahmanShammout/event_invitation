@@ -29,6 +29,19 @@ enum HallStatus {
   suspended
 }
 
+enum HallAccountStatus {
+  active
+  frozen
+  suspended
+}
+
+enum HallCreditTransactionType {
+  recharge
+  debit
+  refund
+  adjustment
+}
+
 enum MessageStatus {
   holding
   pending
@@ -64,9 +77,11 @@ model User {
   updatedAt      DateTime    @updatedAt @map("updated_at")
 
   // Relations
-  ownedHalls     Hall[]      @relation("HallOwner")
-  createdInvites Invitation[] @relation("InvitationCreator")
-  hall           Hall?       @relation("HallEmployees", fields: [hallId], references: [id])
+  ownedHalls              Hall[]                  @relation("HallOwner")
+  createdInvites          Invitation[]            @relation("InvitationCreator")
+  hall                    Hall?                   @relation("HallEmployees", fields: [hallId], references: [id])
+  accountStateChanges     HallAccountState[]      @relation("AccountStateChangedBy")
+  creditTransactions      HallCreditTransaction[] @relation("CreditTransactionPerformedBy")
 
   @@map("users")
 }
@@ -85,12 +100,57 @@ model Hall {
   updatedAt   DateTime   @updatedAt @map("updated_at")
 
   // Relations
-  owner           User              @relation("HallOwner", fields: [ownerId], references: [id])
-  employees       User[]            @relation("HallEmployees")
-  invitations     Invitation[]
-  whatsappSession WhatsAppSession?
+  owner              User                  @relation("HallOwner", fields: [ownerId], references: [id])
+  employees          User[]                @relation("HallEmployees")
+  invitations        Invitation[]
+  whatsappSession    WhatsAppSession?
+  accountState       HallAccountState?
+  creditBalance      HallCreditBalance?
+  creditTransactions HallCreditTransaction[]
 
   @@map("halls")
+}
+
+model HallAccountState {
+  id          Int               @id @default(autoincrement())
+  hallId      Int               @unique @map("hall_id")
+  status      HallAccountStatus @default(active)
+  reason      String?
+  changedById Int?              @map("changed_by_id")
+  createdAt   DateTime          @default(now()) @map("created_at")
+  updatedAt   DateTime          @updatedAt @map("updated_at")
+
+  hall        Hall              @relation(fields: [hallId], references: [id])
+  changedBy   User?             @relation("AccountStateChangedBy", fields: [changedById], references: [id])
+
+  @@map("hall_account_states")
+}
+
+model HallCreditBalance {
+  hallId           Int   @id @map("hall_id")
+  availableCredits Int   @default(0) @map("available_credits")
+  reservedCredits  Int   @default(0) @map("reserved_credits")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  hall             Hall  @relation(fields: [hallId], references: [id])
+
+  @@map("hall_credit_balances")
+}
+
+model HallCreditTransaction {
+  id             Int                       @id @default(autoincrement())
+  hallId         Int                       @map("hall_id")
+  type           HallCreditTransactionType
+  amount         Int
+  balanceAfter   Int                       @map("balance_after")
+  performedById  Int?                      @map("performed_by_id")
+  reference      String?
+  createdAt      DateTime                  @default(now()) @map("created_at")
+
+  hall           Hall                      @relation(fields: [hallId], references: [id])
+  performedBy    User?                     @relation("CreditTransactionPerformedBy", fields: [performedById], references: [id])
+
+  @@map("hall_credit_transactions")
 }
 
 model Invitation {

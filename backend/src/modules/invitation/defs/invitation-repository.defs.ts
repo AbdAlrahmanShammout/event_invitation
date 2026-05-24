@@ -27,7 +27,7 @@ export type GetInvitationRepoInput = {
 };
 
 export type GetInvitationsRepoInput = {
-  hallId: number;
+  hallId?: number;
   creatorId?: number;
   status?: InvitationStatus;
   eventDateFrom?: Date;

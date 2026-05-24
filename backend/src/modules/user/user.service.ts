@@ -1,7 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { hashString } from '@/common/helpers/bcrypt.helper';
-import { CreateUserServiceInput, UpdatePasswordServiceInput, UpdateHallIdServiceInput } from '@/modules/user/defs/user-service.defs';
+import {
+  CreateUserServiceInput,
+  GetUsersServiceInput,
+  UpdateHallIdServiceInput,
+  UpdatePasswordServiceInput,
+} from '@/modules/user/defs/user-service.defs';
 import { UserEntity } from '@/modules/user/entity/user.entity';
 import { UserRepository } from '@/modules/user/repository/user.repository';
 
@@ -22,12 +27,29 @@ export class UserService {
     return user;
   }
 
+  async findUsers(input: GetUsersServiceInput = {}): Promise<UserEntity[]> {
+    return this.userRepository.findAll({
+      hallId: input.hallId,
+      role: input.role,
+      limit: input.limit || 20,
+      offset: input.offset || 0,
+    });
+  }
+
   async findByEmailAndPassword(email: string, hashedPassword: string): Promise<UserEntity | null> {
     return this.userRepository.findOneUserByEmailAndHashPassword(email, hashedPassword);
   }
 
   async findUserById(id: number): Promise<UserEntity | null> {
     return this.userRepository.findUserById(id);
+  }
+
+  async getUserById(id: number): Promise<UserEntity> {
+    const user = await this.findUserById(id);
+    if (!user) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
+    return user;
   }
 
   async findByEmail(email: string): Promise<UserEntity | null> {

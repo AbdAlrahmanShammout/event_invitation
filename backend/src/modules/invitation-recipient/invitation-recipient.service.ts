@@ -1,9 +1,14 @@
 import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
 
 import { MobileRecipientDto } from '@/modules/invitation/dto/request/add-recipients-request.dto';
-import { InvitationRecipientRepository } from '@/modules/invitation-recipient/repository/invitation-recipient.repository';
+import {
+  DeliverySummary,
+  FindRecipientsInput,
+  InvitationRecipientRepository,
+} from '@/modules/invitation-recipient/repository/invitation-recipient.repository';
 import { InvitationRecipientEntity } from '@/modules/invitation-recipient/entity/invitation-recipient.entity';
 import { InvitationMessageService } from '@/modules/invitation-message/invitation-message.service';
+import { MessageStatus } from '@/modules/invitation-recipient/enum/general.enum';
 
 @Injectable()
 export class InvitationRecipientService {
@@ -87,6 +92,26 @@ export class InvitationRecipientService {
     }
 
     return await this.invitationRecipientRepository.updateRecipient(recipientId, data);
+  }
+
+  async findRecipients(input: FindRecipientsInput): Promise<InvitationRecipientEntity[]> {
+    return this.invitationRecipientRepository.findRecipients(input);
+  }
+
+  async getDeliverySummary(invitationId: number): Promise<DeliverySummary> {
+    return this.invitationRecipientRepository.getDeliverySummary(invitationId);
+  }
+
+  async getTodayRecipients(hallId: number): Promise<InvitationRecipientEntity[]> {
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);
+    const endOfDay = new Date();
+    endOfDay.setHours(23, 59, 59, 999);
+    return this.invitationRecipientRepository.findRecipients({
+      hallId,
+      sendAtFrom: startOfDay,
+      sendAtTo: endOfDay,
+    });
   }
 
   /**

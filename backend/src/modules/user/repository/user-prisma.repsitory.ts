@@ -1,6 +1,12 @@
 import { Injectable } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 
-import { CreateUserRepoInput, UpdatePasswordRepoInput, UpdateHallIdRepoInput } from '@/modules/user/defs/user-repository.defs';
+import {
+  CreateUserRepoInput,
+  GetUsersRepoInput,
+  UpdateHallIdRepoInput,
+  UpdatePasswordRepoInput,
+} from '@/modules/user/defs/user-repository.defs';
 import { UserMapper } from '@/modules/user/mapper/user.mapper';
 import { UserRepository } from '@/modules/user/repository/user.repository';
 import { PrismaService } from '@/providers/database/prisma/prisma-provider.service';
@@ -23,6 +29,25 @@ export class UserPrismaRepsitory implements UserRepository {
     });
 
     return UserMapper.toEntity(result);
+  }
+
+  async findAll(input: GetUsersRepoInput): Promise<UserEntity[]> {
+    const where: Prisma.UserWhereInput = {};
+    if (input.hallId) {
+      where.hallId = input.hallId;
+    }
+    if (input.role) {
+      where.role = input.role;
+    }
+    const results = await this.prismaService.user.findMany({
+      where,
+      take: input.limit,
+      skip: input.offset,
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+    return results.map((result) => UserMapper.toEntity(result));
   }
 
   async findOneUserByEmailAndHashPassword(

@@ -83,7 +83,20 @@ export class InvitationService {
     });
   }
 
-  async approveInvitation(input: { id: number; userHallId: number }): Promise<InvitationEntity> {
+  async rejectInvitation(input: { id: number; userHallId?: number }): Promise<InvitationEntity> {
+    const invitation = await this.getInvitationById({
+      id: input.id,
+      userHallId: input.userHallId,
+    });
+    if (invitation.status !== InvitationStatus.PENDING_APPROVAL) {
+      throw new BadRequestException(
+        `Invitation cannot be rejected. Current status: ${invitation.status}. Expected status: ${InvitationStatus.PENDING_APPROVAL}`,
+      );
+    }
+    return this.invitationRepository.update({ id: input.id, status: InvitationStatus.DRAFT });
+  }
+
+  async approveInvitation(input: { id: number; userHallId?: number }): Promise<InvitationEntity> {
     // First check if invitation exists and belongs to user's hall
     const invitation = await this.getInvitationById({
       id: input.id,

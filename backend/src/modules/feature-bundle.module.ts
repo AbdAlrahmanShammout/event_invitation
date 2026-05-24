@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 
+import { AdminMonitoringModule } from '@/modules/admin-monitoring/admin-monitoring.module';
 import { HallModule } from '@/modules/hall/hall.module';
 import { InvitationModule } from '@/modules/invitation/invitation.module';
 import { InvitationMessageModule } from '@/modules/invitation-message/invitation-message.module';
@@ -9,6 +10,7 @@ import { WhatsappSessionModule } from '@/modules/whatsapp-session/whatsapp-sessi
 
 @Module({
   imports: [
+    AdminMonitoringModule,
     HallModule,
     InvitationModule,
     InvitationMessageModule,

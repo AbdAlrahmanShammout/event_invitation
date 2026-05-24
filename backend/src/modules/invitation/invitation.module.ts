@@ -1,5 +1,7 @@
 import { Module } from '@nestjs/common';
 
+import { HallOperationGuard } from '@/common/guards/hall-operation.guard';
+import { InvitationAdminController } from '@/modules/invitation/invitation.admin.controller';
 import { InvitationController } from '@/modules/invitation/invitation.controller';
 import { InvitationMobileController } from '@/modules/invitation/invitation.mobile.controller';
 import { InvitationService } from '@/modules/invitation/invitation.service';
@@ -13,10 +15,11 @@ import { InvitationMessageModule } from '@/modules/invitation-message/invitation
 
 @Module({
   imports: [DatabaseProviderModule, HallModule, InvitationRecipientModule, InvitationMessageModule],
-  controllers: [InvitationController, InvitationMobileController],
+  controllers: [InvitationController, InvitationMobileController, InvitationAdminController],
   providers: [
     MobileTokenService,
     InvitationService,
+    HallOperationGuard,
     {
       provide: InvitationRepository,
       useClass: InvitationPrismaRepository,

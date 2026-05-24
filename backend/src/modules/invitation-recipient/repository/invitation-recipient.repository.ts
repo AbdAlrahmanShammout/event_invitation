@@ -7,10 +7,36 @@ export type CreateMobileRecipientsInput = {
   recipients: MobileRecipientDto[];
 };
 
+export type FindRecipientsInput = {
+  invitationId?: number;
+  hallId?: number;
+  messageStatus?: MessageStatus;
+  sentAtFrom?: Date;
+  sentAtTo?: Date;
+  sendAtFrom?: Date;
+  sendAtTo?: Date;
+  limit?: number;
+  offset?: number;
+};
+
+export type DeliverySummary = {
+  holding: number;
+  pending: number;
+  sent: number;
+  delivered: number;
+  read: number;
+  failed: number;
+  total: number;
+};
+
 export abstract class InvitationRecipientRepository {
   abstract createRecipients(input: CreateMobileRecipientsInput): Promise<void>;
 
   abstract findRecipientsByInvitation(invitationId: number): Promise<InvitationRecipientEntity[]>;
+
+  abstract findRecipients(input: FindRecipientsInput): Promise<InvitationRecipientEntity[]>;
+
+  abstract getDeliverySummary(invitationId: number): Promise<DeliverySummary>;
 
   abstract getRecipientsCountByInvitation(invitationId: number): Promise<number>;
 

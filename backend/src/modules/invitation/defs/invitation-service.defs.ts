@@ -27,7 +27,7 @@ export type GetInvitationServiceInput = {
 };
 
 export type GetInvitationsServiceInput = {
-  hallId: number;
+  hallId?: number;
   creatorId?: number;
   status?: InvitationStatus;
   eventDateFrom?: Date;
