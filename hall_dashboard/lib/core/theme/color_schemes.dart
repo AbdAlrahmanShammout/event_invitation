@@ -1,71 +1,100 @@
 import 'package:flutter/material.dart';
 
-/// Light color scheme for the application.
-/// Defines all semantic colors used throughout the app in light mode.
-/// These colors follow Material Design 3 guidelines.
+// ── Light scheme — clean indigo/slate SaaS palette ───────────────────────────
+//
+//  Primary   : Indigo 600  (#4F46E5)  — brand accent
+//  Secondary : Violet 600  (#7C3AED)  — secondary accent
+//  Tertiary  : Sky 500     (#0EA5E9)  — info / highlight
+//  Surface   : White       (#FFFFFF)
+//  Background: Slate 50    (#F8FAFC)
+//  Text      : Slate 900   (#0F172A)  primary
+//              Slate 500   (#64748B)  secondary
+//
 const lightColorScheme = ColorScheme(
   brightness: Brightness.light,
-  primary: Color(0xFF2B9162),
-  onPrimary: Color(0xFFF6F6F6),
-  primaryContainer: Color(0xFF44D0C0),
-  onPrimaryContainer: Color(0xFF110068),
-  secondary: Color(0xFF203AD0),
+
+  // ── Primary — indigo ────────────────────────────────────────────────────────
+  primary: Color(0xFF4F46E5),
+  onPrimary: Color(0xFFFFFFFF),
+  primaryContainer: Color(0xFFEEF2FF),
+  onPrimaryContainer: Color(0xFF312E81),
+
+  // ── Secondary — violet ──────────────────────────────────────────────────────
+  secondary: Color(0xFF7C3AED),
   onSecondary: Color(0xFFFFFFFF),
-  secondaryContainer: Color(0xFF6070CE),
-  onSecondaryContainer: Color(0xFF002113),
-  tertiary: Color(0xFF5654A8),
+  secondaryContainer: Color(0xFFEDE9FE),
+  onSecondaryContainer: Color(0xFF4C1D95),
+
+  // ── Tertiary — sky ──────────────────────────────────────────────────────────
+  tertiary: Color(0xFF0EA5E9),
   onTertiary: Color(0xFFFFFFFF),
-  tertiaryContainer: Color(0xFFE2DFFF),
-  onTertiaryContainer: Color(0xFF100563),
-  error: Color(0xFF9C413E),
+  tertiaryContainer: Color(0xFFE0F2FE),
+  onTertiaryContainer: Color(0xFF0C4A6E),
+
+  // ── Error — red ─────────────────────────────────────────────────────────────
+  error: Color(0xFFDC2626),
   onError: Color(0xFFFFFFFF),
-  errorContainer: Color(0xFFFFDAD7),
-  onErrorContainer: Color(0xFF410004),
-  outline: Color(0xFF72777F),
-  surface: Color(0xFFEEEEEE),
-  onSurface: Color(0xFF1A1C1E),
-  surfaceContainerHighest: Color(0xFFDEE3EB),
-  onSurfaceVariant: Color(0xFF42474E),
-  inverseSurface: Color(0xFF2F3133),
-  onInverseSurface: Color(0xFFF0F0F4),
-  inversePrimary: Color(0xFFC4C0FF),
+  errorContainer: Color(0xFFFEE2E2),
+  onErrorContainer: Color(0xFF7F1D1D),
+
+  // ── Surfaces & backgrounds ──────────────────────────────────────────────────
+  surface: Color(0xFFFFFFFF),
+  onSurface: Color(0xFF0F172A),
+  surfaceContainerHighest: Color(0xFFF1F5F9),
+  onSurfaceVariant: Color(0xFF64748B),
+
+  // ── Outlines ────────────────────────────────────────────────────────────────
+  outline: Color(0xFF94A3B8),
+  outlineVariant: Color(0xFFE2E8F0),
+
+  // ── Inverse ─────────────────────────────────────────────────────────────────
+  inverseSurface: Color(0xFF1E293B),
+  onInverseSurface: Color(0xFFF8FAFC),
+  inversePrimary: Color(0xFF818CF8),
+
+  // ── Misc ────────────────────────────────────────────────────────────────────
   shadow: Color(0xFF000000),
-  surfaceTint: Color(0xFF5650BA),
-  outlineVariant: Color(0xFFC2C7CF),
+  surfaceTint: Color(0xFF4F46E5),
   scrim: Color(0xFF000000),
 );
 
-/// Dark color scheme for the application.
-/// Defines all semantic colors used throughout the app in dark mode.
-/// These colors follow Material Design 3 guidelines and provide good contrast.
+// ── Dark scheme — deep slate / indigo ────────────────────────────────────────
 const darkColorScheme = ColorScheme(
   brightness: Brightness.dark,
-  primary: Color(0xFFC4C0FF),
-  onPrimary: Color(0xFF261A8A),
-  primaryContainer: Color(0xFF3E36A0),
-  onPrimaryContainer: Color(0xFFE3DFFF),
-  secondary: Color(0xFF70DBA8),
-  onSecondary: Color(0xFF003824),
-  secondaryContainer: Color(0xFF005236),
-  onSecondaryContainer: Color(0xFF8CF7C2),
-  tertiary: Color(0xFFC3C0FF),
-  onTertiary: Color(0xFF272377),
-  tertiaryContainer: Color(0xFF3E3C8F),
-  onTertiaryContainer: Color(0xFFE2DFFF),
-  error: Color(0xFFFFB3AE),
-  onError: Color(0xFF5F1414),
-  errorContainer: Color(0xFF7E2A28),
-  onErrorContainer: Color(0xFFFFDAD7),
-  outline: Color(0xFF8C9199),
-  surface: Color(0xFF111416),
-  onSurface: Color(0xFFC6C6C9),
-  surfaceContainerHighest: Color(0xFF42474E),
-  onSurfaceVariant: Color(0xFFC2C7CF),
-  inverseSurface: Color(0xFFE2E2E5),
-  onInverseSurface: Color(0xFF1A1C1E),
-  inversePrimary: Color(0xFF5650BA),
+
+  primary: Color(0xFF818CF8),
+  onPrimary: Color(0xFF1E1B4B),
+  primaryContainer: Color(0xFF3730A3),
+  onPrimaryContainer: Color(0xFFE0E7FF),
+
+  secondary: Color(0xFFA78BFA),
+  onSecondary: Color(0xFF2E1065),
+  secondaryContainer: Color(0xFF4C1D95),
+  onSecondaryContainer: Color(0xFFEDE9FE),
+
+  tertiary: Color(0xFF38BDF8),
+  onTertiary: Color(0xFF082F49),
+  tertiaryContainer: Color(0xFF0369A1),
+  onTertiaryContainer: Color(0xFFE0F2FE),
+
+  error: Color(0xFFFCA5A5),
+  onError: Color(0xFF7F1D1D),
+  errorContainer: Color(0xFF991B1B),
+  onErrorContainer: Color(0xFFFEE2E2),
+
+  surface: Color(0xFF0F172A),
+  onSurface: Color(0xFFE2E8F0),
+  surfaceContainerHighest: Color(0xFF1E293B),
+  onSurfaceVariant: Color(0xFF94A3B8),
+
+  outline: Color(0xFF475569),
+  outlineVariant: Color(0xFF334155),
+
+  inverseSurface: Color(0xFFE2E8F0),
+  onInverseSurface: Color(0xFF0F172A),
+  inversePrimary: Color(0xFF4F46E5),
+
   shadow: Color(0xFF000000),
-  surfaceTint: Color(0xFFC4C0FF),
-  outlineVariant: Color(0xFF42474E),
+  surfaceTint: Color(0xFF818CF8),
   scrim: Color(0xFF000000),
 );
