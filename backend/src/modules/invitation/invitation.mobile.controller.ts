@@ -10,7 +10,7 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiHeader, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { MobileAuth } from '@/common/decorators/requests/mobile-auth.decorator';
 import { MobileAuthGuard, RequireMobilePermission } from '@/common/guards/mobile-auth.guard';
@@ -30,7 +30,7 @@ import { InvitationMessagesListResponseDto } from '@/modules/invitation-message/
 import { InvitationMessageResponse } from '@/modules/invitation-message/dto/response/model/invitation-message.response';
 import { LinkRecipientsToMessageRequestDto } from '@/modules/invitation-recipient/dto/request/link-recipients-to-message.request.dto';
 
-@ApiTags('invitation-mobile')
+@ApiTags('Mobile App - Invitations')
 @Controller('invitation')
 @UseGuards(MobileAuthGuard)
 @ApiHeader({
@@ -114,6 +114,7 @@ export class InvitationMobileController {
     summary: 'Submit guest list',
     description: 'Submits a list of guests to be invited. Requires hall approval.',
   })
+  @ApiBody({ type: AddRecipientsRequestDto })
   @ApiResponse({
     status: 201,
     description: 'Recipients submitted successfully',
@@ -190,6 +191,8 @@ export class InvitationMobileController {
     summary: 'Update a recipient',
     description: 'Updates the details of a specific recipient',
   })
+  @ApiParam({ name: 'id', description: 'Recipient ID', type: 'number' })
+  @ApiBody({ type: UpdateRecipientRequestDto })
   @ApiResponse({
     status: 200,
     description: 'Recipient updated successfully',
@@ -236,6 +239,7 @@ export class InvitationMobileController {
     summary: 'Delete a recipient',
     description: 'Removes a recipient from the invitation',
   })
+  @ApiParam({ name: 'id', description: 'Recipient ID', type: 'number' })
   @ApiResponse({
     status: 200,
     description: 'Recipient deleted successfully',
@@ -300,6 +304,7 @@ export class InvitationMobileController {
     summary: 'Create invitation message',
     description: 'Creates a new message for the invitation that will be sent to recipients',
   })
+  @ApiBody({ type: CreateInvitationMessageDto })
   @ApiResponse({
     status: 201,
     description: 'Message created successfully',
@@ -344,6 +349,8 @@ export class InvitationMobileController {
     summary: 'Update invitation message',
     description: 'Updates an existing message for the invitation',
   })
+  @ApiParam({ name: 'id', description: 'Message ID', type: 'number' })
+  @ApiBody({ type: UpdateInvitationMessageDto })
   @ApiResponse({
     status: 200,
     description: 'Message updated successfully',
@@ -385,6 +392,7 @@ export class InvitationMobileController {
     summary: 'Delete invitation message',
     description: 'Deletes an existing message from the invitation',
   })
+  @ApiParam({ name: 'id', description: 'Message ID', type: 'number' })
   @ApiResponse({
     status: 200,
     description: 'Message deleted successfully',
@@ -416,6 +424,7 @@ export class InvitationMobileController {
     summary: 'Link recipients to message',
     description: 'Links multiple recipients to a specific message for bulk operations',
   })
+  @ApiBody({ type: LinkRecipientsToMessageRequestDto })
   @ApiResponse({
     status: 200,
     description: 'Recipients successfully linked to message',
@@ -456,7 +465,8 @@ export class InvitationMobileController {
   @RequireMobilePermission('submit_for_approval')
   @ApiOperation({
     summary: 'Submit invitation for approval',
-    description: 'Submits the invitation for hall admin approval. Validates that all recipients have messages and send dates assigned, and that the recipient count is within the allowed limit.',
+    description:
+      'Submits the invitation for hall admin approval. Validates that all recipients have messages and send dates assigned, and that the recipient count is within the allowed limit.',
   })
   @ApiResponse({
     status: 200,
@@ -465,7 +475,8 @@ export class InvitationMobileController {
   })
   @ApiResponse({
     status: 400,
-    description: 'Bad request - Validation failed (missing recipients, messages, send dates, or exceeds limit)',
+    description:
+      'Bad request - Validation failed (missing recipients, messages, send dates, or exceeds limit)',
   })
   @ApiResponse({
     status: 401,

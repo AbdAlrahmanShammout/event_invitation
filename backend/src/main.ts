@@ -1,8 +1,9 @@
-import { Logger, ValidationPipe } from '@nestjs/common';
+import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 
 import { InputValidationPipe } from '@/common/pipes/input-validation.pipe';
 import { AppConfigService } from '@/config/app/app-config.service';
+import { SWAGGER_UI_ROOT } from '@/providers/swagger/consts';
 import { SwaggerProvider } from '@/providers/swagger/swagger.provider';
 
 import { AppModule } from './app.module';
@@ -20,6 +21,9 @@ async function bootstrap() {
   await app.listen(port || 3000);
 
   Logger.log(`Server running on http://localhost:${port}`, 'Bootstrap');
-  Logger.log(`Swagger documentation available at http://localhost:${port}/docs`, 'Bootstrap');
+  Logger.log(
+    `Swagger documentation available at http://localhost:${port}/${SWAGGER_UI_ROOT}`,
+    'Bootstrap',
+  );
 }
 bootstrap();

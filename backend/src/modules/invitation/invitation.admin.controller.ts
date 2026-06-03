@@ -1,12 +1,5 @@
 import { Controller, Get, Param, ParseIntPipe, Post, Query, UseGuards } from '@nestjs/common';
-import {
-  ApiBearerAuth,
-  ApiOperation,
-  ApiParam,
-  ApiQuery,
-  ApiResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { Roles } from '@/common/decorators/route/roles.decorator';
 import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
@@ -21,7 +14,7 @@ import { UserRole } from '@/modules/user/enum/general.enum';
 /**
  * Handles invitation management endpoints that are restricted to super admins.
  */
-@ApiTags('admin-invitations')
+@ApiTags('Admin - Invitations')
 @Controller('admin/invitations')
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles(UserRole.SUPER_ADMIN)

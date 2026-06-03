@@ -21,7 +21,7 @@ import { UserService } from '@/modules/user/user.service';
 /**
  * Handles user management endpoints that are restricted to super admins.
  */
-@ApiTags('admin-users')
+@ApiTags('Admin - Users')
 @Controller('admin/users')
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles(UserRole.SUPER_ADMIN)
@@ -54,7 +54,8 @@ export class UserAdminController {
   @Get()
   @ApiOperation({
     summary: 'List users',
-    description: 'Returns users with optional role and hall filters. Super admin access is required.',
+    description:
+      'Returns users with optional role and hall filters. Super admin access is required.',
   })
   @ApiResponse({
     status: 200,

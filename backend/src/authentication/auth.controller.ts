@@ -4,12 +4,13 @@ import { LocalAuthGuard } from '@/common/guards/local-auth.guard';
 import { LoggedInUser } from '@/common/decorators/requests/logged-in-user.decorator';
 import { UserEntity } from '@/modules/user/entity/user.entity';
 import { AuthResultDto } from '@/authentication/dto/response/auth-result.dto';
-import { ApiBody, ApiOkResponse, ApiOperation } from '@nestjs/swagger';
+import { ApiBody, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { LoginDto } from '@/authentication/dto/request/login.dto';
 import { JwtAuthTokenPayload } from '@/authentication/types/jwt-auth-token-payload.type';
 import { JwtTokenService } from '@/providers/jwt/jwt-token.service';
 import { InputValidationPipe } from '@/common/pipes/input-validation.pipe';
 
+@ApiTags('Authentication')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly jwtTokenService: JwtTokenService) {}

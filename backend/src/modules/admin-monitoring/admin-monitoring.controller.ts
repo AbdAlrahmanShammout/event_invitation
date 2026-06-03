@@ -15,7 +15,7 @@ import { UserRole } from '@/modules/user/enum/general.enum';
 /**
  * Platform-wide monitoring endpoints restricted to super admins.
  */
-@ApiTags('admin-monitoring')
+@ApiTags('Admin - Monitoring')
 @Controller('admin/monitoring')
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles(UserRole.SUPER_ADMIN)

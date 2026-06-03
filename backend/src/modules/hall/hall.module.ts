@@ -1,7 +1,5 @@
 import { Module } from '@nestjs/common';
 
-import { HallAdminController } from '@/modules/hall/hall.admin.controller';
-import { HallController } from '@/modules/hall/hall.controller';
 import { HallAccountService } from '@/modules/hall/hall-account.service';
 import { HallService } from '@/modules/hall/hall.service';
 import { HallPrismaReposiory } from '@/modules/hall/repository/hall-prisma.reposiory';
@@ -14,7 +12,6 @@ import { WhatsappSessionModule } from '@/modules/whatsapp-session/whatsapp-sessi
 
 @Module({
   imports: [DatabaseProviderModule, UserModule, WhatsappSessionModule],
-  controllers: [HallController, HallAdminController],
   providers: [
     HallService,
     HallAccountService,

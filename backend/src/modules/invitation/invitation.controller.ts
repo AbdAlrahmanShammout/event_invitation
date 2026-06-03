@@ -39,7 +39,7 @@ import { InvitationRecipientService } from '@/modules/invitation-recipient/invit
 import { InvitationRecipientResponse } from '@/modules/invitation-recipient/dto/response/model/invitation-recipient.response';
 import { DeliverySummary } from '@/modules/invitation-recipient/repository/invitation-recipient.repository';
 
-@ApiTags('invitations')
+@ApiTags('Hall Manager - Invitations')
 @Controller('invitation')
 @UseGuards(JwtAuthGuard, HallOperationGuard)
 @ApiBearerAuth()

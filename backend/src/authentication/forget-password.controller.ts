@@ -14,7 +14,7 @@ import {
 import { BaseMessageResponse } from '@/common/base/base-message.response';
 
 @Controller('auth/password')
-@ApiTags('auth/password')
+@ApiTags('Authentication - Password')
 export class ForgetPasswordController {
   constructor(
     private readonly usersService: UserService,

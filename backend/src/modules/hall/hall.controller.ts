@@ -1,5 +1,5 @@
 import { Controller, Get, UnauthorizedException, UseGuards } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 import { LoggedInUser } from '@/common/decorators/requests/logged-in-user.decorator';
 import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
@@ -8,8 +8,9 @@ import { HallService } from '@/modules/hall/hall.service';
 import { WhatsappSessionService } from '@/modules/whatsapp-session/whatsapp-session.service';
 import { UserEntity } from '@/modules/user/entity/user.entity';
 
-@ApiTags('halls')
+@ApiTags('Hall Manager - Hall')
 @Controller('hall')
+@ApiBearerAuth()
 export class HallController {
   constructor(
     private readonly hallService: HallService,

@@ -1,22 +1,10 @@
 import { Module } from '@nestjs/common';
 
-import { AdminMonitoringModule } from '@/modules/admin-monitoring/admin-monitoring.module';
-import { HallModule } from '@/modules/hall/hall.module';
-import { InvitationModule } from '@/modules/invitation/invitation.module';
-import { InvitationMessageModule } from '@/modules/invitation-message/invitation-message.module';
-import { InvitationRecipientModule } from '@/modules/invitation-recipient/invitation-recipient.module';
-import { UserModule } from '@/modules/user/user.module';
-import { WhatsappSessionModule } from '@/modules/whatsapp-session/whatsapp-session.module';
+import { AdminApiModule } from '@/modules/admin-api.module';
+import { HallManagerApiModule } from '@/modules/hall-manager-api.module';
+import { MobileApiModule } from '@/modules/mobile-api.module';
 
 @Module({
-  imports: [
-    AdminMonitoringModule,
-    HallModule,
-    InvitationModule,
-    InvitationMessageModule,
-    InvitationRecipientModule,
-    UserModule,
-    WhatsappSessionModule,
-  ],
+  imports: [AdminApiModule, HallManagerApiModule, MobileApiModule],
 })
 export class FeatureBundleModule {}

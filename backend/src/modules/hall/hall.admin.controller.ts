@@ -42,7 +42,7 @@ import { UserEntity } from '@/modules/user/entity/user.entity';
 /**
  * Handles hall management endpoints restricted to super admins.
  */
-@ApiTags('admin-halls')
+@ApiTags('Admin - Halls')
 @Controller('admin/halls')
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles(UserRole.SUPER_ADMIN)

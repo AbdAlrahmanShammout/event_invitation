@@ -8,10 +8,9 @@ import { FeatureBundleModule } from '@/modules/feature-bundle.module';
 import { ProviderModule } from '@/providers/provider.module';
 
 import { AppController } from './app.controller';
-import { AuthModule } from '@/authentication/auth.module';
 
 @Module({
-  imports: [ConfigsModule, ProviderModule, AuthModule, FeatureBundleModule],
+  imports: [ConfigsModule, ProviderModule, FeatureBundleModule],
   controllers: [AppController],
   providers: [
     {
