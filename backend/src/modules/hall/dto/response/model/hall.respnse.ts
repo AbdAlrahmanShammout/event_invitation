@@ -51,9 +51,8 @@ export class HallRespnse extends BaseModelResponseDto {
   ownerId: number;
 
   @ApiProperty({
-    description: 'Current balance of the hall',
-    example: '50000',
-    type: 'string',
+    description: 'Available message credits for the hall (from credit balance)',
+    example: 5000,
   })
   balance: number;
 

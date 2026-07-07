@@ -6,4 +6,5 @@ type HallDetailsPayload = Prisma.HallGetPayload<{
   include: typeof hallDetailsInclude;
 }>;
 
-export type HallDetailsSchema = Hall & Partial<Pick<HallDetailsPayload, 'owner' | 'employees' | 'invitations'>>;
+export type HallDetailsSchema = Hall &
+  Partial<Pick<HallDetailsPayload, 'owner' | 'employees' | 'invitations' | 'creditBalance'>>;

@@ -16,7 +16,7 @@ export class HallMapper {
       phone: schema.phone,
       status: schema.status,
       ownerId: schema.ownerId,
-      balance: schema.balance,
+      balance: schema.creditBalance?.availableCredits ?? schema.balance,
       owner: schema.owner ? UserMapper.toEntity(schema.owner) : null,
       employees: schema.employees ? schema.employees.map((e) => UserMapper.toEntity(e)) : null,
       invitations: schema.invitations
