@@ -1,10 +1,10 @@
 import { HallEntity } from '@/modules/hall/entity/hall.entity';
-import { HallDetailsSchema } from '@/modules/hall/types/hall-details-schema.type';
+import { HallType } from '@/modules/hall/types/hall-details-schema.type';
 import { InvitationMapper } from '@/modules/invitation/mapper/invitation.mapper';
 import { UserMapper } from '@/modules/user/mapper/user.mapper';
 
 export class HallMapper {
-  static toEntity(schema: HallDetailsSchema): HallEntity {
+  static toEntity(schema: HallType): HallEntity {
     return new HallEntity({
       id: schema.id,
       createdAt: schema.createdAt,

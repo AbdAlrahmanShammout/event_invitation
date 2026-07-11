@@ -1,9 +1,9 @@
 import { InvitationMessageEntity } from '@/modules/invitation-message/entity/invitation-message.entity';
-import { InvitationMessageDetailsSchema } from '@/modules/invitation-message/types/invitation-message-details-schema.type';
+import { InvitationMessageType } from '@/modules/invitation-message/types/invitation-message-details-schema.type';
 import { InvitationRecipientMapper } from '@/modules/invitation-recipient/mapper/invitation-recipient.mapper';
 
 export class InvitationMessageMapper {
-  static toEntity(schema: InvitationMessageDetailsSchema): InvitationMessageEntity {
+  static toEntity(schema: InvitationMessageType): InvitationMessageEntity {
     return new InvitationMessageEntity({
       id: schema.id,
       createdAt: schema.createdAt,

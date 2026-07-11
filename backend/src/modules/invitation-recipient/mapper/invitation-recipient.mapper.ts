@@ -1,8 +1,8 @@
 import { InvitationRecipientEntity } from '@/modules/invitation-recipient/entity/invitation-recipient.entity';
-import { InvitationRecipientDetailsSchema } from '@/modules/invitation-recipient/types/invitation-recipient-details-schema.type';
+import { InvitationRecipientType } from '@/modules/invitation-recipient/types/invitation-recipient-details-schema.type';
 
 export class InvitationRecipientMapper {
-  static toEntity(schema: InvitationRecipientDetailsSchema): InvitationRecipientEntity {
+  static toEntity(schema: InvitationRecipientType): InvitationRecipientEntity {
     return new InvitationRecipientEntity({
       id: schema.id,
       createdAt: schema.createdAt,

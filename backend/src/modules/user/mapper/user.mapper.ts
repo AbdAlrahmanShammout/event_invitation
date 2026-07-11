@@ -1,11 +1,10 @@
-import { User } from '@prisma/client';
-
 import { UserEntity } from '@/modules/user/entity/user.entity';
+import { UserType } from '@/modules/user/types/user-details-schema.type';
 
 // User mapper for converting Prisma User to UserEntity
 
 export class UserMapper {
-  static toEntity(schema: User): UserEntity {
+  static toEntity(schema: UserType): UserEntity {
     return new UserEntity({
       id: schema.id,
       name: schema.name,

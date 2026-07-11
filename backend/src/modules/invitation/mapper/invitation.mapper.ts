@@ -2,11 +2,11 @@ import { InvitationEntity } from '@/modules/invitation/entity/invitation.entity'
 import { InvitationStatus } from '@/modules/invitation/enum/general.enum';
 import { InvitationMessageMapper } from '@/modules/invitation-message/mapper/invitation-message.mapper';
 import { InvitationRecipientMapper } from '@/modules/invitation-recipient/mapper/invitation-recipient.mapper';
-import { InvitationDetailsSchema } from '@/modules/invitation/types/invitation-details-schema.type';
+import { InvitationType } from '@/modules/invitation/types/invitation-details-schema.type';
 import { UserMapper } from '@/modules/user/mapper/user.mapper';
 
 export class InvitationMapper {
-  static toEntity(schema: InvitationDetailsSchema): InvitationEntity {
+  static toEntity(schema: InvitationType): InvitationEntity {
     return new InvitationEntity({
       id: schema.id,
       createdAt: schema.createdAt,

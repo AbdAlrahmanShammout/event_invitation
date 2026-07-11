@@ -1,10 +1,14 @@
-import type { Invitation, Prisma } from '@prisma/client';
+import type { Prisma } from '@prisma/client';
 
-import { invitationDetailsInclude } from '@/modules/invitation/types/invitation-details.include';
+import { OptionalRelations } from '@/common/base/base.entity';
 
-type InvitationDetailsPayload = Prisma.InvitationGetPayload<{
-  include: typeof invitationDetailsInclude;
-}>;
-
-export type InvitationDetailsSchema = Invitation &
-  Partial<Pick<InvitationDetailsPayload, 'creator' | 'messages' | 'recipients'>>;
+export type InvitationType = OptionalRelations<
+  Prisma.InvitationGetPayload<{
+    include: {
+      creator: true;
+      hall: true;
+      messages: true;
+      recipients: true;
+    };
+  }>
+>;

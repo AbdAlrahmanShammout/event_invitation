@@ -1,10 +1,17 @@
-import type { Hall, Prisma } from '@prisma/client';
+import type { Prisma } from '@prisma/client';
 
-import { hallDetailsInclude } from '@/modules/hall/types/hall-details.include';
+import { OptionalRelations } from '@/common/base/base.entity';
 
-type HallDetailsPayload = Prisma.HallGetPayload<{
-  include: typeof hallDetailsInclude;
-}>;
-
-export type HallDetailsSchema = Hall &
-  Partial<Pick<HallDetailsPayload, 'owner' | 'employees' | 'invitations' | 'creditBalance'>>;
+export type HallType = OptionalRelations<
+  Prisma.HallGetPayload<{
+    include: {
+      owner: true;
+      employees: true;
+      invitations: true;
+      whatsappSession: true;
+      accountState: true;
+      creditBalance: true;
+      creditTransactions: true;
+    };
+  }>
+>;
